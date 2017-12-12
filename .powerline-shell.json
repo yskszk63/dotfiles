@@ -1,0 +1,13 @@
+{
+  "segments": [
+    "username",
+    "hostname",
+    "cwd",
+    "git",
+    "root"
+  ],
+  "cwd": {
+      "mode": "dironly"
+  },
+  "theme": "solarized_light"
+}

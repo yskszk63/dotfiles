@@ -1,0 +1,24 @@
+#!/usr/bin/bash
+
+dir=`dirname $0`
+dir=`cd $dir && pwd`
+venv=$dir/venv
+
+[ -d "$venv" ] || python -mvenv $venv
+$venv/bin/pip install -r $dir/requirements.txt
+
+setup() {
+    target=$1
+    [ -e ~/"$target" -a ! -L ~/"$target" ] && {
+        echo "file exists ~/$target"
+        return -1
+    }
+    [ -e ~/"$target" ] || {
+        mkdir -p "`dirname ~/$target`" && \
+            ln -sv $dir/$target ~/$target
+    }
+}
+
+setup .bashrc
+setup .config/nvim/init.vim
+setup .powerline-shell.json
