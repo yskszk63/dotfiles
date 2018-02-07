@@ -1,4 +1,6 @@
-greenlet==0.4.12
+greenlet==0.4.13
+msgpack==0.5.4
 msgpack-python==0.4.8
-neovim==0.2.0
-powerline-shell==0.4.3
+neovim==0.2.1
+pkg-resources==0.0.0
+powerline-shell==0.4.8
