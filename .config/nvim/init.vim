@@ -10,13 +10,19 @@ set shiftwidth=4
 let g:python3_host_prog = expand('~/.dotfiles/venv/bin/python')
 
 tnoremap <silent> <ESC> <C-\><C-n>
+nnoremap @t :vsplit<CR>:terminal<CR>
 
 " vim-plug
 call plug#begin('~/.local/share/nvim/plugged')
 Plug 'NLKNguyen/papercolor-theme'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'w0rp/ale'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
 call plug#end()
 
 " theme
@@ -42,3 +48,14 @@ endfunction
 
 " <S-TAB>: completion back.
 inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<C-h>"
+
+" LanguageClient-neovim
+set hidden
+
+let g:LanguageClient_serverCommands = {
+    \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
+    \ }
+
+nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
