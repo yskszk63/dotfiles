@@ -1,10 +1,11 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 dir=`dirname $0`
 dir=`cd $dir && pwd`
 venv=$dir/venv
 
-[ -d "$venv" ] || python -mvenv $venv
+[ -d "$venv" ] || python3 -mvenv $venv
+$venv/bin/pip install -U pip
 $venv/bin/pip install -r $dir/requirements.txt
 
 setup() {

@@ -14,7 +14,7 @@ alias vi=$EDITOR
 alias grep='grep --color'
 alias less='less -S'
 
-export PATH=$PATH:~/.local/bin
+export PATH=~/.local/bin:~/.cargo/bin:$PATH
 
 function _update_ps1() {
     PS1="$(~/.dotfiles/venv/bin/powerline-shell $?)"
