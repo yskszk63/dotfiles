@@ -1,7 +1,5 @@
 {
   "segments": [
-    "username",
-    "hostname",
     "cwd",
     "git",
     "root"

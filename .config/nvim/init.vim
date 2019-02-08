@@ -5,12 +5,15 @@ set expandtab
 set autoindent
 set tabstop=4
 set shiftwidth=4
+set cursorline
 
 " python path
 let g:python3_host_prog = expand('~/.dotfiles/venv/bin/python')
 
 tnoremap <silent> <ESC> <C-\><C-n>
 nnoremap @t :vsplit<CR>:terminal<CR>
+
+let g:ale_completion_enabled = 1
 
 " vim-plug
 call plug#begin('~/.local/share/nvim/plugged')
@@ -23,6 +26,7 @@ Plug 'autozimu/LanguageClient-neovim', {
     \ 'branch': 'next',
     \ 'do': 'bash install.sh',
     \ }
+Plug 'rust-lang/rust.vim'
 call plug#end()
 
 " theme
@@ -54,8 +58,11 @@ set hidden
 
 let g:LanguageClient_serverCommands = {
     \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
+    \ 'java': ['/home/ysk/work/jdtls/launch.sh'],
     \ }
 
+nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+nnoremap <silent> <F3> :call LanguageClient_textDocument_references()<CR>

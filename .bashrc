@@ -23,3 +23,6 @@ function _update_ps1() {
 if [ "$TERM" != "linux" ]; then
     PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
 fi
+
+# added by travis gem
+[ -f /home/ysk/.travis/travis.sh ] && source /home/ysk/.travis/travis.sh
