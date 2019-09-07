@@ -1,5 +1,11 @@
+future==0.17.1
 greenlet==0.4.15
+jedi==0.13.2
 msgpack==0.6.0
 neovim==0.3.1
+parso==0.3.4
+pluggy==0.8.1
 powerline-shell==0.6.0
-pynvim==0.3.1
+pynvim==0.3.2
+python-jsonrpc-server==0.1.2
+python-language-server==0.23.2
