@@ -5,6 +5,8 @@ set expandtab
 set autoindent
 set tabstop=4
 set shiftwidth=4
+set ignorecase
+set smartcase
 set cursorline
 set termguicolors
 set completeopt=menuone,noselect
@@ -14,6 +16,8 @@ endif
 if exists('&winblend')
     set winblend=30
 endif
+set relativenumber
+set clipboard+=unnamedplus
 
 " python path
 let g:python3_host_prog = expand('~/.dotfiles/venv/bin/python')
@@ -22,7 +26,7 @@ tnoremap <silent> <ESC> <C-\><C-n>
 nnoremap @t :botright split<CR>:terminal<CR>i
 nnoremap @T :tabnew<CR>:terminal<CR>i
 
-let g:ale_completion_enabled = 1
+"let g:ale_completion_enabled = 1
 
 " vim-plug
 call plug#begin('~/.local/share/nvim/plugged')
@@ -30,11 +34,12 @@ Plug 'NLKNguyen/papercolor-theme'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 "Plug 'w0rp/ale'
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'autozimu/LanguageClient-neovim', {
-    \ 'branch': 'next',
-    \ 'do': 'bash install.sh',
-    \ }
+"Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+"Plug 'autozimu/LanguageClient-neovim', {
+"    \ 'branch': 'next',
+"    \ 'do': 'bash install.sh',
+"    \ }
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 "Plug 'junegunn/fzf'
 Plug 'rust-lang/rust.vim'
 "Plug 'nvie/vim-flake8'
@@ -63,10 +68,10 @@ let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline_powerline_fonts = 1
 
 " deoplete
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#auto_complete_delay = 0
+"let g:deoplete#enable_at_startup = 1
+"let g:deoplete#auto_complete_delay = 0
 "" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+"inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 "imap <silent><expr> <TAB> pumvisible() ? "\<C-n>" : <SID>check_back_space() ? "\<TAB>" : deoplete#mappings#manual_complete()
 "function! s:check_back_space() abort
 "    let col = col('.') - 1
@@ -74,23 +79,64 @@ inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 "endfunction
 
 " <S-TAB>: completion back.
-inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<C-h>"
+"inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<C-h>"
+
+" coc.neovim
+"
+set updatetime=300
+set shortmess+=c
+
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " LanguageClient-neovim
 set hidden
 
-let g:LanguageClient_serverCommands = {
-    \ 'rust': ['rls'],
-    \ 'python': ['pyls'],
-    \ }
+"let g:LanguageClient_serverCommands = {
+"    \ 'rust': ['rls'],
+"    \ 'python': ['pyls'],
+"    \ }
 
-nnoremap <F5> :call LanguageClient_contextMenu()<CR>
+"nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 " Or map each action separately
-nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+"nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+"nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+"nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 
-let g:LanguageClient_selectionUI = 'fzf'
+"let g:LanguageClient_selectionUI = 'fzf'
 
 "au User lsp_setup call lsp#register_server({
 "    \ 'name': 'pyls',
@@ -122,6 +168,7 @@ hi Normal guibg=NONE ctermbg=NONE
 
 " no term number
 autocmd TermOpen * setlocal nonumber
+autocmd TermOpen * setlocal norelativenumber
 
 " https://github.com/yuttie/comfortable-motion.vim
 let g:comfortable_motion_friction = 80.0
