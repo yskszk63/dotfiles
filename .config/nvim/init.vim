@@ -17,7 +17,7 @@ if exists('&winblend')
     set winblend=30
 endif
 set relativenumber
-set clipboard+=unnamedplus
+"set clipboard+=unnamedplus
 
 " python path
 let g:python3_host_prog = expand('~/.dotfiles/venv/bin/python')
@@ -83,8 +83,13 @@ let g:airline_powerline_fonts = 1
 
 " coc.neovim
 "
+set nobackup
+set nowritebackup
+
 set updatetime=300
 set shortmess+=c
+
+set signcolumn=yes
 
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
@@ -99,6 +104,14 @@ endfunction
 
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
+
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
+" position. Coc only does snippet and additional edit on confirm.
+if exists('*complete_info')
+  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+else
+  imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+endif
 
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
@@ -169,6 +182,7 @@ hi Normal guibg=NONE ctermbg=NONE
 " no term number
 autocmd TermOpen * setlocal nonumber
 autocmd TermOpen * setlocal norelativenumber
+autocmd TermOpen * setlocal signcolumn=
 
 " https://github.com/yuttie/comfortable-motion.vim
 let g:comfortable_motion_friction = 80.0
