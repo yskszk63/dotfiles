@@ -17,7 +17,9 @@ if exists('&winblend')
     set winblend=30
 endif
 set relativenumber
-"set clipboard+=unnamedplus
+set clipboard+=unnamedplus
+
+let mapleader = "\<Space>"
 
 " python path
 let g:python3_host_prog = expand('~/.dotfiles/venv/bin/python')
@@ -26,33 +28,21 @@ tnoremap <silent> <ESC> <C-\><C-n>
 nnoremap @t :botright split<CR>:terminal<CR>i
 nnoremap @T :tabnew<CR>:terminal<CR>i
 
-"let g:ale_completion_enabled = 1
-
 " vim-plug
 call plug#begin('~/.local/share/nvim/plugged')
 Plug 'NLKNguyen/papercolor-theme'
+Plug 'ctrlpvim/ctrlp.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-"Plug 'w0rp/ale'
-"Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-"Plug 'autozimu/LanguageClient-neovim', {
-"    \ 'branch': 'next',
-"    \ 'do': 'bash install.sh',
-"    \ }
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-"Plug 'junegunn/fzf'
 Plug 'rust-lang/rust.vim'
 "Plug 'nvie/vim-flake8'
-"Plug 'prabirshrestha/async.vim'
-"Plug 'prabirshrestha/vim-lsp'
-"Plug 'prabirshrestha/asyncomplete.vim'
-"Plug 'prabirshrestha/asyncomplete-lsp.vim'
-Plug 'ryanoasis/vim-devicons'
-Plug 'scrooloose/nerdtree'
+Plug 'preservim/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'yuttie/comfortable-motion.vim'
 Plug 'cespare/vim-toml'
 Plug 'junegunn/fzf.vim'
+Plug 'ryanoasis/vim-devicons'
 call plug#end()
 
 " theme
@@ -67,22 +57,8 @@ let g:airline#extensions#tabline#fnamemod = ':t'
 
 let g:airline_powerline_fonts = 1
 
-" deoplete
-"let g:deoplete#enable_at_startup = 1
-"let g:deoplete#auto_complete_delay = 0
-"" <TAB>: completion.
-"inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-"imap <silent><expr> <TAB> pumvisible() ? "\<C-n>" : <SID>check_back_space() ? "\<TAB>" : deoplete#mappings#manual_complete()
-"function! s:check_back_space() abort
-"    let col = col('.') - 1
-"    return !col || getline('.')[col - 1]  =~ '\s'
-"endfunction
-
-" <S-TAB>: completion back.
-"inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<C-h>"
-
 " coc.neovim
-"
+set hidden
 set nobackup
 set nowritebackup
 
@@ -135,45 +111,10 @@ endfunction
 
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
-" LanguageClient-neovim
-set hidden
-
-"let g:LanguageClient_serverCommands = {
-"    \ 'rust': ['rls'],
-"    \ 'python': ['pyls'],
-"    \ }
-
-"nnoremap <F5> :call LanguageClient_contextMenu()<CR>
-" Or map each action separately
-"nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-"nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-"nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-
-"let g:LanguageClient_selectionUI = 'fzf'
-
-"au User lsp_setup call lsp#register_server({
-"    \ 'name': 'pyls',
-"    \ 'cmd': {server_info->[expand('~/.dotfiles/venv/bin/pyls')]},
-"    \ 'whitelist': ['python'],
-"    \ })
-"let g:lsp_signs_enabled = 1         " enable signs
-"let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
-
-" flake8
-"let g:flake8_cmd="pipenv run flake8"
-
-" ale
-"let g:ale_linters = {
-"    \ 'python': ['flake8', 'mypy', 'pyls'],
-"    \ 'rust': ['cargo', 'rls'],
-"    \ }
-"let g:airline#extensions#ale#enabled = 1
-"let g:ale_python_auto_pipenv = 1
-"let g:ale_sign_error = '✗'
-"let g:ale_sign_warning = '➔'
-"let g:ale_python_pyls_executable = expand('~/.dotfiles/venv/bin/pyls')
-"let g:ale_python_flake8_auto_pipenv = 1
-"let g:ale_python_mypy_auto_pipenv = 1
+" Remap keys for applying codeAction to the current line.
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Apply AutoFix to problem on the current line.
+nmap <leader>qf  <Plug>(coc-fix-current)
 
 " keep transparent
 " https://stackoverflow.com/questions/37712730/set-vim-background-transparent
@@ -190,6 +131,14 @@ let g:comfortable_motion_air_drag = 2.0
 
 " NERDTree
 nnoremap <silent><C-n> :NERDTreeToggle<CR>
+
+" NERDTree-git-plugin
+let g:NERDTreeGitStatusUseNerdFonts = 1
+let g:NERDTreeGitStatusShowClean = 1
+let g:NERDTreeGitStatusLogLevel = 3 " https://github.com/ryanoasis/vim-devicons/pull/355
+
+" ctrlp
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
 
 " TermColor (Pencil Light)
 let g:terminal_color_0  = "#212121" "black
