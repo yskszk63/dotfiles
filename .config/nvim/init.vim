@@ -1,161 +1,212 @@
-syntax on
-set mouse=
-set number
-set expandtab
-set autoindent
-set tabstop=4
-set shiftwidth=4
-set ignorecase
-set smartcase
-set cursorline
-set termguicolors
-set completeopt=menuone,noselect
-if exists('&pumblend')
-    set pumblend=30
-endif
-if exists('&winblend')
-    set winblend=30
-endif
-set relativenumber
-set clipboard+=unnamedplus
+lua << EOF
 
-let mapleader = "\<Space>"
+vim.opt.mouse = ""
+vim.opt.number = true
+vim.opt.expandtab = true
+vim.opt.autoindent = true
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+vim.opt.cursorline = true
+vim.opt.termguicolors = true
+vim.opt.completeopt = { "menuone", "noselect" }
+vim.opt.pumblend = 20
+vim.opt.winblend = 20
+vim.opt.relativenumber = true
+vim.opt.clipboard = vim.opt.clipboard + { "unnamedplus" }
+vim.opt.sh = "zsh"
+vim.opt.termguicolors = true
 
-" python path
-let g:python3_host_prog = expand('~/.dotfiles/venv/bin/python')
+vim.g.vimsyn_embed = 'l'
+vim.g.mapleader = ' '
 
-tnoremap <silent> <ESC> <C-\><C-n>
-nnoremap @t :botright split<CR>:terminal<CR>i
-nnoremap @T :tabnew<CR>:terminal<CR>i
+-- keymap for terminal
+vim.api.nvim_set_keymap('t', '<ESC>', [[<C-\><C-n>]], { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '@t', [[:botright split<CR>:terminal<CR>i]], { noremap = true })
+vim.api.nvim_set_keymap('n', '@T', [[:tabnew<CR>:terminal<CR>i]], { noremap = true })
 
-" vim-plug
-call plug#begin('~/.local/share/nvim/plugged')
-Plug 'NLKNguyen/papercolor-theme'
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'rust-lang/rust.vim'
-"Plug 'nvie/vim-flake8'
-Plug 'preservim/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'yuttie/comfortable-motion.vim'
-Plug 'cespare/vim-toml'
-Plug 'junegunn/fzf.vim'
-Plug 'ryanoasis/vim-devicons'
-call plug#end()
+require'packer'.startup(function()
+  use'sainnhe/edge'
 
-" theme
-set background=light
-colorscheme PaperColor
+  use {
+    'nvim-telescope/telescope.nvim',
+    requires = {
+      {'nvim-lua/plenary.nvim'}
+    }
+  }
 
-" vim-airline
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#show_buffers = 0
-let g:airline#extensions#tabline#tab_nr_type = 1
-let g:airline#extensions#tabline#fnamemod = ':t'
+  use'lambdalisue/battery.vim'
+  use {
+    'hoob3rt/lualine.nvim',
+    requires = {'kyazdani42/nvim-web-devicons'}
+  }
+  use {'akinsho/nvim-bufferline.lua', requires = 'kyazdani42/nvim-web-devicons'}
+  --use {
+    --'romgrk/barbar.nvim',
+    --requires = {'kyazdani42/nvim-web-devicons'}
+  --}
+  --use'beauwilliams/statusline.lua'
 
-let g:airline_powerline_fonts = 1
+  use'preservim/nerdtree'
+  use'Xuyuanp/nerdtree-git-plugin'
 
-" coc.neovim
-set hidden
-set nobackup
-set nowritebackup
+  use'yuttie/comfortable-motion.vim'
 
-set updatetime=300
-set shortmess+=c
+  use'cespare/vim-toml'
+  use'rust-lang/rust.vim'
 
-set signcolumn=yes
+  use {
+    'nvim-treesitter/nvim-treesitter',
+    run = ':TSUpdate'
+  }
 
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+  use'glepnir/indent-guides.nvim'
 
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+  use'neovim/nvim-lspconfig'
+  use'nvim-lua/lsp-status.nvim'
+  use'hrsh7th/nvim-compe'
+  use'simrat39/rust-tools.nvim'
+end)
 
-" Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
+-- Theme
+vim.g.edge_style = 'aura'
+vim.g.edge_enable_italic = 1
+vim.g.edge_disable_italic_comment = 0
+vim.g.edge_transparent_background = 1
+vim.g.edge_diagnostic_text_highlight = 1
+vim.g.edge_diagnostic_virtual_text = 'colored'
 
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
-" position. Coc only does snippet and additional edit on confirm.
-if exists('*complete_info')
-  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-else
-  imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-endif
+vim.cmd([[colorscheme edge]])
 
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
+-- Telescope
+require'telescope'.setup {
+  defaults = {
+    color_devicons = false
+  }
+}
+vim.api.nvim_set_keymap('n', '<C-p>', [[<cmd>lua require('telescope.builtin').find_files()<CR>]], { noremap = true })
+vim.api.nvim_set_keymap('n', '<Leader>b', [[<cmd>lua require('telescope.builtin').buffers()<cr>]], { noremap = true })
 
-" Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+-- lualine
+require'lualine'.setup {
+  options = {
+    theme = 'ayu_dark'
+  },
+  sections = {
+    lualine_c = {'filename', vim.fn['battery#component']},
+    lualine_x = {require'lsp-status'.status, 'encoding', 'fileformat', {'filetype',colored=false}},
+    lualine_z = {'location', {'diagnostics', sources = {'nvim_lsp'}}}
+  }
+}
+-- nvim-bufferline.lua
+require("bufferline").setup {
+  options = {
+    diagnostics = "nvim_lsp",
+  }
+}
 
-" Use K to show documentation in preview window
-nnoremap <silent> K :call <SID>show_documentation()<CR>
+-- no term number
+vim.cmd([[autocmd TermOpen * setlocal nonumber]])
+vim.cmd([[autocmd TermOpen * setlocal norelativenumber]])
+vim.cmd([[autocmd TermOpen * setlocal signcolumn=]])
 
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
+-- NERDTree
+vim.api.nvim_set_keymap('n', '<C-n>', [[:NERDTreeToggle<CR>]], { noremap = true, silent = true })
+vim.g.NERDTreeGitStatusUseNerdFonts = 1
+vim.g.NERDTreeGitStatusShowClean = 1
 
-autocmd CursorHold * silent call CocActionAsync('highlight')
+-- lsp
+local lsp_status = require'lsp-status'
+lsp_status.register_progress()
 
-" Remap keys for applying codeAction to the current line.
-nmap <leader>ac  <Plug>(coc-codeaction)
-" Apply AutoFix to problem on the current line.
-nmap <leader>qf  <Plug>(coc-fix-current)
+local nvim_lsp = require('lspconfig')
 
-" keep transparent
-" https://stackoverflow.com/questions/37712730/set-vim-background-transparent
-hi Normal guibg=NONE ctermbg=NONE
+-- https://github.com/neovim/nvim-lspconfig#keybindings-and-completion
 
-" no term number
-autocmd TermOpen * setlocal nonumber
-autocmd TermOpen * setlocal norelativenumber
-autocmd TermOpen * setlocal signcolumn=
+-- Use an on_attach function to only map the following keys
+-- after the language server attaches to the current buffer
+local on_attach = function(client, bufnr)
+  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
-" https://github.com/yuttie/comfortable-motion.vim
-let g:comfortable_motion_friction = 80.0
-let g:comfortable_motion_air_drag = 2.0
+  --Enable completion triggered by <c-x><c-o>
+  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-" NERDTree
-nnoremap <silent><C-n> :NERDTreeToggle<CR>
+  -- Mappings.
+  local opts = { noremap=true, silent=true }
 
-" NERDTree-git-plugin
-let g:NERDTreeGitStatusUseNerdFonts = 1
-let g:NERDTreeGitStatusShowClean = 1
-let g:NERDTreeGitStatusLogLevel = 3 " https://github.com/ryanoasis/vim-devicons/pull/355
+  -- See `:help vim.lsp.*` for documentation on any of the below functions
+  buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+  buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+  buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+  buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+  buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+  buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+  buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+  buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+  buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+  buf_set_keymap('n', '[g', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+  buf_set_keymap('n', ']g', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+  buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+  buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 
-" ctrlp
-let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
+  -- added
+  lsp_status.on_attach(client, bufnr)
+end
 
-" TermColor (Pencil Light)
-let g:terminal_color_0  = "#212121" "black
-let g:terminal_color_1  = "#c30771" "red
-let g:terminal_color_2  = "#10a778" "green
-let g:terminal_color_3  = "#a89c14" "yellow
-let g:terminal_color_4  = "#008ec4" "blue
-let g:terminal_color_5  = "#523c79" "magenta
-let g:terminal_color_6  = "#20a5ba" "cyan
-let g:terminal_color_7  = "#e0e0e0" "white
-let g:terminal_color_8  = "#212121" "bright black
-let g:terminal_color_9  = "#fb007a" "bright red
-let g:terminal_color_10 = "#5fd7af" "bright green
-let g:terminal_color_11 = "#f3e430" "bright yellow
-let g:terminal_color_12 = "#20bbfc" "bright blue
-let g:terminal_color_13 = "#6855de" "bright magenta
-let g:terminal_color_14 = "#4fb8cc" "bright cyan
-let g:terminal_color_15 = "#f1f1f1" "bright white
-let g:terminal_color_background = "#f1f1f1" "background
-let g:terminal_color_foreground = "#424242" "foreground
+-- Use a loop to conveniently call 'setup' on multiple servers and
+-- map buffer local keybindings when the language server attaches
+local servers = { }
+for _, lsp in ipairs(servers) do
+  nvim_lsp[lsp].setup {
+    on_attach = on_attach,
+    capabilities = lsp_status.capabilities,
+    flags = {
+      debounce_text_changes = 150,
+    }
+  }
+end
+
+require'compe'.setup {
+  enabled = true,
+  source = {
+    path = true,
+    buffer = true,
+    nvim_lsp = true,
+  },
+}
+
+-- Map compe confirm and complete functions
+vim.api.nvim_set_keymap('i', '<cr>', 'compe#confirm("<cr>")', { expr = true })
+vim.api.nvim_set_keymap('i', '<c-space>', 'compe#complete()', { expr = true })
+
+require'rust-tools'.setup {
+  server = {
+    on_attach = on_attach,
+    flags = {
+      debounce_text_changes = 150,
+    },
+    settings = {
+      ["rust-analyzer"] = {
+        diagnostics = {
+          enable = false
+        }
+      }
+    }
+  }
+}
+
+require'indent_guides'.setup {
+  indent_start_level = 2,
+  --indent_guide_size = 4,
+  --even_colors = { fg ='#2a3834',bg='#332b36' },
+  --odd_colors = {fg='#332b36',bg='#2a3834'},
+}
+
+EOF
+" vim:set sw=2 ts=2 sts=2:
