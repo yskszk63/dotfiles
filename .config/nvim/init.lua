@@ -99,14 +99,10 @@ _G.prepare_packer = function()
     }
 
     use {
-      'akinsho/nvim-bufferline.lua',
+      'alvarosevilla95/luatab.nvim',
       requires = 'kyazdani42/nvim-web-devicons',
       config = function()
-        require("bufferline").setup {
-          options = {
-            diagnostics = "nvim_lsp",
-          }
-        }
+        vim.o.tabline = [[lua require'luatab'.tabline()]]
       end,
     }
 
@@ -487,3 +483,5 @@ _G.setup_galaxyline = function(gl)
     }
   }
 end
+
+-- vim:set sw=2 ts=2 sts=2:
