@@ -58,16 +58,16 @@ _G.prepare_packer = function()
     }
 
     use {
-      'sainnhe/edge',
+      'sainnhe/sonokai',
       config = function()
-        vim.g.edge_style = 'aura'
-        vim.g.edge_enable_italic = 1
-        vim.g.edge_disable_italic_comment = 0
-        vim.g.edge_transparent_background = 1
-        vim.g.edge_diagnostic_text_highlight = 1
-        vim.g.edge_diagnostic_virtual_text = 'colored'
+        vim.g.sonokai_style = 'andromeda'
+        vim.g.sonokai_enable_italic = 1
+        vim.g.sonokai_transparent_background = 1
+        vim.g.sonokai_diagnostic_text_highlight = 1
+        vim.g.sonokai_diagnostic_line_highlight = 1
+        vim.g.sonokai_diagnostic_virtual_text = 'colored'
 
-        vim.cmd([[colorscheme edge]])
+        vim.cmd([[colorscheme sonokai]])
       end,
     }
 
@@ -102,7 +102,7 @@ _G.prepare_packer = function()
       'alvarosevilla95/luatab.nvim',
       requires = 'kyazdani42/nvim-web-devicons',
       config = function()
-        vim.o.tabline = [[lua require'luatab'.tabline()]]
+        vim.o.tabline = [[%!v:lua.require'luatab'.tabline()]]
       end,
     }
 
