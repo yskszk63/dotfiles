@@ -1,0 +1,44 @@
+#!/bin/bash
+
+base=$(dirname $0)
+base=$(cd $base; pwd)
+
+git --version >/dev/null 2>&1 || {
+    echo 'No git found. Please install git.' >&2
+    exit -1
+}
+
+
+# Setup zsh
+if zsh --version > /dev/null 2>&1; then
+    git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
+    zsh - << EOF
+setopt EXTENDED_GLOB
+for rcfile in "\${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do
+  ln -s "\$rcfile" "\${ZDOTDIR:-$HOME}/.\${rcfile:t}"
+done
+EOF
+
+    cp "$base/.zpreztorc" "$base/.zprofile" "$base/.zshrc" ~
+    cp "$base/.p10k.zsh" ~
+else
+    echo 'No zsh found. Skip setup zsh.' >&2
+fi
+
+
+# Setup Neovim
+if nvim --version >/dev/null 2>&1; then
+    [ -f ~/.config/nvim/init.lua ] && [ ! ~/.config/nvim/init.lua -ef "$base/.confing/nvim/init.lua" ] && {
+        echo 'Please remove ~/.config/nvim/init.lua first.'
+        exit -1
+    }
+
+    [ ! -f ~/.config/nvim/init.lua ] && {
+        mkdir -p ~/.config/nvim
+        ln -sv "$base/.config/nvim/init.lua" ~/.config/nvim/init.lua
+    }
+
+    nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
+else
+    echo 'No Neovim found. Skip setup Neovim.' >&2
+fi
