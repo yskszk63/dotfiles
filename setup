@@ -11,6 +11,7 @@ git --version >/dev/null 2>&1 || {
 
 # Setup zsh
 ln -svf "$base/.zshrc" ~
+ln -svf "$base/.p10k.zsh" ~
 
 
 # Setup Neovim
