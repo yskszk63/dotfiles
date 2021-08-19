@@ -10,20 +10,7 @@ git --version >/dev/null 2>&1 || {
 
 
 # Setup zsh
-if zsh --version > /dev/null 2>&1; then
-    git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
-    zsh - << EOF
-setopt EXTENDED_GLOB
-for rcfile in "\${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do
-  ln -s "\$rcfile" "\${ZDOTDIR:-$HOME}/.\${rcfile:t}"
-done
-EOF
-
-    cp "$base/.zpreztorc" "$base/.zprofile" "$base/.zshrc" ~
-    cp "$base/.p10k.zsh" ~
-else
-    echo 'No zsh found. Skip setup zsh.' >&2
-fi
+ln -svf "$base/.zshrc" ~
 
 
 # Setup Neovim

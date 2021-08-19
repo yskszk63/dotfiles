@@ -130,6 +130,8 @@ _G.prepare_packer = function()
       end,
     }
 
+    use{'anekos/runes-vim', opts=true}
+
     use{
       'neovim/nvim-lspconfig',
       requires = {
@@ -177,7 +179,7 @@ _G.prepare_packer = function()
 
         -- Use a loop to conveniently call 'setup' on multiple servers and
         -- map buffer local keybindings when the language server attaches
-        local servers = { 'gopls' }
+        local servers = { 'gopls', 'denols' }
         for _, lsp in ipairs(servers) do
           nvim_lsp[lsp].setup {
             on_attach = on_attach,
