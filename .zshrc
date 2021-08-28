@@ -35,10 +35,30 @@ zinit light-mode for \
 bindkey -d
 bindkey -e
 
+HISTFILE=~/.zsh_history
+HISTSIZE=1000
+SAVEHIST=1000
+
+setopt share_history
+
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$HOME/.deno/bin:$HOME/.go/bin:$PATH"
+export GOPATH=~/.go
+
 zinit ice depth=1
 zinit light romkatv/powerlevel10k
 zinit light zsh-users/zsh-autosuggestions
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
 
-alias ls='exa'
+[[ ! -f /usr/share/fzf/key-bindings.zsh ]] || source /usr/share/fzf/key-bindings.zsh
+[[ ! -f /usr/share/fzf/completion.zsh ]] || source /usr/share/fzf/completion.zsh
+
+which exa > /dev/null 2>&1 && alias ls='exa'
+
+which renvim > /dev/null 2>&1 && {
+    export EDITOR=renvim
+    alias vi=$EDITOR
+}
+
+autoload -Uz compinit
+compinit
