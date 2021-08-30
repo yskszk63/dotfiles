@@ -61,6 +61,21 @@ _G.prepare_packer = function()
         use {'wbthomason/packer.nvim', opt = true}
 
         use {
+          'kuuote/denops-skkeleton.vim',
+          requires = {
+            'vim-denops/denops.vim'
+          },
+          config = function()
+            vim.api.nvim_set_keymap('i', '<C-j>', [[<Plug>(skkeleton-enable)]], {})
+            vim.api.nvim_set_keymap('c', '<C-j>', [[<Plug>(skkeleton-enable)]], {})
+            vim.fn['skkeleton#config'] {
+              eggLikeNewline = true,
+              showCandidatesCount = 0,
+            }
+          end
+        }
+
+        use {
             'sainnhe/sonokai',
             config = function()
                 vim.g.sonokai_style = 'andromeda'
