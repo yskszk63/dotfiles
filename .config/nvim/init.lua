@@ -60,14 +60,18 @@ _G.prepare_packer = function()
     require'packer'.startup(function()
         use {'wbthomason/packer.nvim', opt = true}
 
+        use 'seandewar/nvimesweeper'
+
+        --use 'sunjon/extmark-toy.nvim'
+
         use {
           'kuuote/denops-skkeleton.vim',
           requires = {
             'vim-denops/denops.vim'
           },
           config = function()
-            vim.api.nvim_set_keymap('i', '<C-j>', [[<Plug>(skkeleton-enable)]], {})
-            vim.api.nvim_set_keymap('c', '<C-j>', [[<Plug>(skkeleton-enable)]], {})
+            vim.api.nvim_set_keymap('i', '<C-j>', [[<Plug>(skkeleton-toggle)]], {})
+            vim.api.nvim_set_keymap('c', '<C-j>', [[<Plug>(skkeleton-toggle)]], {})
             vim.fn['skkeleton#config'] {
               eggLikeNewline = true,
               showCandidatesCount = 0,
@@ -100,9 +104,13 @@ _G.prepare_packer = function()
                 vim.api.nvim_set_keymap('n', '<Leader>b',
                                         [[<cmd>lua require('telescope.builtin').buffers()<cr>]],
                                         {noremap = true})
+                vim.api.nvim_set_keymap('n', '<Leader>rg',
+                                        [[<cmd>lua require('telescope.builtin').live_grep({ prompt_prefix="🔍" })<cr>]],
+                                        {noremap = true})
             end
         }
 
+        --[[
         use {
             'glepnir/galaxyline.nvim',
             branch = 'main',
@@ -114,6 +122,25 @@ _G.prepare_packer = function()
                 _G.setup_galaxyline(require 'galaxyline')
             end
         }
+        ]]
+				use {
+						'hoob3rt/lualine.nvim',
+						requires = {
+								'kyazdani42/nvim-web-devicons',
+								'lambdalisue/battery.vim',
+								'nvim-lua/lsp-status.nvim',
+						},
+						config = function()
+							require('lualine').setup{
+									options = {
+											theme = 'ayu_dark'
+									},
+                  sections = {
+                      lualine_c = {'filename', 'battery#component', require'lsp-status'.status},
+                  },
+							}
+						end
+				}
 
         use {
             'alvarosevilla95/luatab.nvim',
@@ -136,6 +163,7 @@ _G.prepare_packer = function()
         use 'cespare/vim-toml'
         use 'rust-lang/rust.vim'
         use 'andrejlevkovitch/vim-lua-format'
+        use 'ollykel/v-vim'
 
         use {'nvim-treesitter/nvim-treesitter', run = ':TSUpdate'}
 
@@ -152,11 +180,81 @@ _G.prepare_packer = function()
             'neovim/nvim-lspconfig',
             requires = {
                 'nvim-lua/lsp-status.nvim', 'simrat39/rust-tools.nvim',
-                'ray-x/lsp_signature.nvim', 'onsails/lspkind-nvim'
+                --'onsails/lspkind-nvim'
             },
             config = function() _G.setup_lsp() end
         }
 
+        use {
+            'Shougo/ddc.vim',
+            requires = {
+                'vim-denops/denops.vim',
+                'Shougo/ddc-nvim-lsp',
+                'matsui54/ddc-nvim-lsp-doc',
+                'Shougo/ddc-around',
+            },
+            config = function()
+                vim.api.nvim_set_keymap('i', '<c-space>', 'ddc#manual_complete()',
+                                        {expr = true, noremap = true})
+                vim.fn['ddc#custom#patch_global']('sources', {'nvimlsp', 'skkeleton', 'around'})
+                vim.fn['ddc#custom#patch_global']('sourceOptions', {
+                    ['_'] = {
+                        matchers = {'matcher_head'},
+                        sorters = {'sorter_rank'},
+                    },
+                    nvimlsp = {
+                        mark = 'lsp',
+                        forceCompletionPattern = [[\.\w*|:\w*|->\w*]],
+                    },
+                    skkeleton = {
+                        mark = 'skkeleton',
+                        matchers = {'skkeleton'},
+                        sorters = {},
+                    },
+                    around = {
+                        mark = 'A',
+                    },
+                })
+                vim.fn['ddc#custom#patch_global']('sourceParams', {
+                    nvimlsp = {
+                        kindLabels = {
+                            Text = "",
+                            Method = "",
+                            Function = "",
+                            Constructor = "",
+                            Field = "ﰠ",
+                            Variable = "",
+                            Class = "ﴯ",
+                            Interface = "",
+                            Module = "",
+                            Property = "ﰠ",
+                            Unit = "塞",
+                            Value = "",
+                            Enum = "",
+                            Keyword = "",
+                            Snippet = "",
+                            Color = "",
+                            File = "",
+                            Reference = "",
+                            Folder = "",
+                            EnumMember = "",
+                            Constant = "",
+                            Struct = "פּ",
+                            Event = "",
+                            Operator = "",
+                            TypeParameter = "",
+                        },
+                    },
+                    around = {
+                        maxSize = 500,
+                    },
+                })
+                vim.fn['ddc#enable']()
+                vim.fn['ddc_nvim_lsp_doc#enable']()
+            end
+        }
+
+        --[[
         use {
             'hrsh7th/nvim-compe',
             config = function()
@@ -217,215 +315,9 @@ _G.prepare_packer = function()
 
             end
         }
+        ]]
 
     end)
-end
-
-_G.setup_galaxyline = function(gl)
-    local gls = gl.section
-    gl.short_line_list = {'NvimTree'}
-
-    local colors = {
-        bg = '#282c34',
-        yellow = '#fabd2f',
-        cyan = '#008080',
-        darkblue = '#081633',
-        green = '#afd700',
-        orange = '#FF8800',
-        purple = '#5d4d7a',
-        magenta = '#d16d9e',
-        grey = '#c0c0c0',
-        blue = '#0087d7',
-        red = '#ec5f67'
-    }
-
-    local buffer_not_empty = function()
-        if vim.fn.empty(vim.fn.expand('%:t')) ~= 1 then return true end
-        return false
-    end
-
-    gls.left[1] = {
-        FirstElement = {
-            provider = function() return ' ' end,
-            highlight = {colors.purple, colors.purple}
-        }
-    }
-    gls.left[2] = {
-        ViMode = {
-            provider = function()
-                -- https://github.com/hoob3rt/lualine.nvim/blob/9726824f1dcc8907632bc7c32f9882f26340f815/lua/lualine/utils/mode.lua#L5
-                local alias = {
-                    ['n'] = 'NORMAL',
-                    ['no'] = 'O-PENDING',
-                    ['nov'] = 'O-PENDING',
-                    ['noV'] = 'O-PENDING',
-                    ['no'] = 'O-PENDING',
-                    ['niI'] = 'NORMAL',
-                    ['niR'] = 'NORMAL',
-                    ['niV'] = 'NORMAL',
-                    ['v'] = 'VISUAL',
-                    ['V'] = 'V-LINE',
-                    [''] = 'V-BLOCK',
-                    ['s'] = 'SELECT',
-                    ['S'] = 'S-LINE',
-                    [''] = 'S-BLOCK',
-                    ['i'] = 'INSERT',
-                    ['ic'] = 'INSERT',
-                    ['ix'] = 'INSERT',
-                    ['R'] = 'REPLACE',
-                    ['Rc'] = 'REPLACE',
-                    ['Rv'] = 'V-REPLACE',
-                    ['Rx'] = 'REPLACE',
-                    ['c'] = 'COMMAND',
-                    ['cv'] = 'EX',
-                    ['ce'] = 'EX',
-                    ['r'] = 'REPLACE',
-                    ['rm'] = 'MORE',
-                    ['r?'] = 'CONFIRM',
-                    ['!'] = 'SHELL',
-                    ['t'] = 'TERMINAL'
-                }
-                local code = vim.api.nvim_get_mode().mode
-                if alias[code] == nil then return code .. ' ' end
-                return alias[code] .. ' '
-            end,
-            separator = ' ',
-            separator_highlight = {
-                colors.purple, function()
-                    if not buffer_not_empty() then
-                        return colors.purple
-                    end
-                    return colors.darkblue
-                end
-            },
-            highlight = {colors.darkblue, colors.purple, 'bold'}
-        }
-    }
-    gls.left[3] = {
-        FileIcon = {
-            provider = 'FileIcon',
-            condition = buffer_not_empty,
-            highlight = {colors.purple, colors.darkblue}
-        }
-    }
-    gls.left[4] = {
-        FileName = {
-            provider = 'FileName',
-            condition = buffer_not_empty,
-            separator = '',
-            separator_highlight = {colors.purple, colors.darkblue},
-            highlight = {colors.magenta, colors.darkblue}
-        }
-    }
-
-    gls.left[5] = {
-        GitIcon = {
-            provider = function() return '  ' end,
-            condition = buffer_not_empty,
-            highlight = {colors.orange, colors.darkblue}
-        }
-    }
-    gls.left[6] = {
-        GitBranch = {
-            provider = 'GitBranch',
-            condition = buffer_not_empty,
-            highlight = {colors.magenta, colors.darkblue}
-        }
-    }
-
-    gls.left[10] = {
-        LeftEnd = {
-            provider = function() return ' ' end,
-            separator = ' ',
-            separator_highlight = {colors.darkblue, colors.bg},
-            highlight = {colors.darkblue, colors.darkblue}
-        }
-    }
-    gls.left[11] = {
-        DiagnosticError = {
-            provider = 'DiagnosticError',
-            icon = '  ',
-            highlight = {colors.red, colors.bg}
-        }
-    }
-    gls.left[12] = {
-        Space = {
-            provider = function() return ' ' end,
-            highlight = {colors.bg, colors.bg}
-        }
-    }
-    gls.left[13] = {
-        DiagnosticWarn = {
-            provider = 'DiagnosticWarn',
-            icon = '  ',
-            highlight = {colors.blue, colors.bg}
-        }
-    }
-    gls.left[14] = {
-        Battery = {
-            provider = vim.fn['battery#component'],
-            separator = '|',
-            separator_highlight = {colors.darkblue, colors.bg},
-            highlight = {colors.darkblue, colors.bg}
-        }
-    }
-    gls.left[15] = {
-        LspStatus = {
-            -- FIXME
-            provider = require'lsp-status'.status,
-            -- provider = function() return 'TODO' end,
-            highlight = {colors.darkblue, colors.bg}
-        }
-    }
-
-    gls.right[1] = {
-        FileFormat = {
-            provider = 'FileFormat',
-            separator = ' ',
-            separator_highlight = {colors.bg, colors.darkblue},
-            highlight = {colors.magenta, colors.darkblue}
-        }
-    }
-    gls.right[2] = {
-        FileEncode = {
-            provider = 'FileEncode',
-            separator = ' |',
-            separator_highlight = {colors.bg, colors.darkblue},
-            highlight = {colors.magenta, colors.darkblue}
-        }
-    }
-    gls.right[3] = {
-        LineInfo = {
-            provider = 'LineColumn',
-            separator = ' |',
-            separator_highlight = {colors.bg, colors.darkblue},
-            highlight = {colors.magenta, colors.darkblue}
-        }
-    }
-    gls.right[4] = {
-        ScrollBar = {
-            provider = 'ScrollBar',
-            highlight = {colors.orange, colors.darkblue}
-        }
-    }
-
-    gls.short_line_left[1] = {
-        BufferType = {
-            provider = 'FileTypeName',
-            separator = ' ',
-            separator_highlight = {colors.purple, colors.bg},
-            highlight = {colors.grey, colors.purple}
-        }
-    }
-
-    gls.short_line_right[1] = {
-        BufferIcon = {
-            provider = 'BufferIcon',
-            separator = ' ',
-            separator_highlight = {colors.purple, colors.bg},
-            highlight = {colors.grey, colors.purple}
-        }
-    }
 end
 
 _G.setup_lsp = function()
@@ -485,12 +377,11 @@ _G.setup_lsp = function()
 
         -- added
         require'lsp-status'.on_attach(client, bufnr)
-        require'lsp_signature'.on_attach({hint_prefix = '🍣'}, bufnr)
     end
 
     -- Use a loop to conveniently call 'setup' on multiple servers and
     -- map buffer local keybindings when the language server attaches
-    local servers = {'gopls', 'denols'}
+    local servers = {'gopls', 'tsserver'}
     for _, lsp in ipairs(servers) do
         nvim_lsp[lsp].setup {
             on_attach = on_attach,
@@ -499,7 +390,14 @@ _G.setup_lsp = function()
         }
     end
 
+    nvim_lsp.denols.setup {
+        on_attach = on_attach,
+        capabilities = require'lsp-status'.capabilities,
+        flags = {debounce_text_changes = 150}
+    }
+
     require'rust-tools'.setup {
+        autostart = false,
         server = {
             on_attach = on_attach,
             flags = {debounce_text_changes = 150},
@@ -520,7 +418,7 @@ _G.setup_lsp = function()
         vim.fn.sign_define(hl, {text = icon, texthl = hl, numhl = ""})
     end
 
-    require'lspkind'.init()
+    --require'lspkind'.init()
 end
 
 -- vim:set sw=2 ts=2 sts=2:
