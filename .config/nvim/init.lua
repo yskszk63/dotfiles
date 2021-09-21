@@ -192,6 +192,8 @@ _G.prepare_packer = function()
                 'Shougo/ddc-nvim-lsp',
                 'matsui54/ddc-nvim-lsp-doc',
                 'Shougo/ddc-around',
+                'Shougo/ddc-matcher_head',
+                'Shougo/ddc-sorter_rank',
             },
             config = function()
                 vim.api.nvim_set_keymap('i', '<c-space>', 'ddc#manual_complete()',
@@ -246,7 +248,7 @@ _G.prepare_packer = function()
                         },
                     },
                     around = {
-                        maxSize = 500,
+                        --maxSize = 500,
                     },
                 })
                 vim.fn['ddc#enable']()
