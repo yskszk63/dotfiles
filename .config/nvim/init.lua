@@ -19,6 +19,34 @@ if vim.fn.executable("zsh") == 1 then vim.opt.sh = "zsh" end
 vim.g.vimsyn_embed = 'l'
 vim.g.mapleader = [[ ]]
 
+_G.reset_term_color = function()
+  -- reset term color
+  vim.b.terminal_color_foreground = '#B3B1AD'
+  vim.b.terminal_color_background = '#0A0E14'
+  vim.b.terminal_color_0 = '#01060E'
+  vim.b.terminal_color_1 = '#EA6C73'
+  vim.b.terminal_color_2 = '#91B362'
+  vim.b.terminal_color_3 = '#F9AF4F'
+  vim.b.terminal_color_4 = '#53BDFA'
+  vim.b.terminal_color_5 = '#FAE994'
+  vim.b.terminal_color_6 = '#90E1C6'
+  vim.b.terminal_color_7 = '#C7C7C7'
+  vim.b.terminal_color_8 = '#686868'
+  vim.b.terminal_color_9 = '#F07178'
+  vim.b.terminal_color_10 = '#C2D94C'
+  vim.b.terminal_color_11 = '#FFB454'
+  vim.b.terminal_color_12 = '#59C2FF'
+  vim.b.terminal_color_13 = '#FFEE99'
+  vim.b.terminal_color_14 = '#95E6CB'
+  vim.b.terminal_color_15 = '#FFFFFF'
+end
+vim.cmd [[
+  augroup mytermcolor
+    autocmd!
+    autocmd TermOpen * lua reset_term_color()
+  augroup END
+]]
+
 -- keymap for terminal
 vim.api.nvim_set_keymap('t', '<ESC>', [[<C-\><C-n>]],
                         {noremap = true, silent = true})
@@ -65,7 +93,7 @@ _G.prepare_packer = function()
         --use 'sunjon/extmark-toy.nvim'
 
         use {
-          'kuuote/denops-skkeleton.vim',
+          'vim-skk/denops-skkeleton.vim',
           requires = {
             'vim-denops/denops.vim'
           },
@@ -74,7 +102,7 @@ _G.prepare_packer = function()
             vim.api.nvim_set_keymap('c', '<C-j>', [[<Plug>(skkeleton-toggle)]], {})
             vim.fn['skkeleton#config'] {
               eggLikeNewline = true,
-              showCandidatesCount = 0,
+              showCandidatesCount = 65535,
             }
           end
         }
@@ -110,19 +138,6 @@ _G.prepare_packer = function()
             end
         }
 
-        --[[
-        use {
-            'glepnir/galaxyline.nvim',
-            branch = 'main',
-            requires = {
-                'kyazdani42/nvim-web-devicons', 'lambdalisue/battery.vim',
-                'nvim-lua/lsp-status.nvim'
-            },
-            config = function()
-                _G.setup_galaxyline(require 'galaxyline')
-            end
-        }
-        ]]
 				use {
 						'hoob3rt/lualine.nvim',
 						requires = {
@@ -198,18 +213,18 @@ _G.prepare_packer = function()
             config = function()
                 vim.api.nvim_set_keymap('i', '<c-space>', 'ddc#manual_complete()',
                                         {expr = true, noremap = true})
-                vim.fn['ddc#custom#patch_global']('sources', {'nvimlsp', 'skkeleton', 'around'})
+                vim.fn['ddc#custom#patch_global']('sources', {'nvim-lsp', 'skkeleton', 'around'})
                 vim.fn['ddc#custom#patch_global']('sourceOptions', {
                     ['_'] = {
                         matchers = {'matcher_head'},
                         sorters = {'sorter_rank'},
                     },
-                    nvimlsp = {
-                        mark = 'lsp',
+                    ['nvim-lsp'] = {
+                        mark = 'LSP',
                         forceCompletionPattern = [[\.\w*|:\w*|->\w*]],
                     },
                     skkeleton = {
-                        mark = 'skkeleton',
+                        mark = 'SKK',
                         matchers = {'skkeleton'},
                         sorters = {},
                     },
@@ -218,7 +233,7 @@ _G.prepare_packer = function()
                     },
                 })
                 vim.fn['ddc#custom#patch_global']('sourceParams', {
-                    nvimlsp = {
+                    ['nvim-lsp'] = {
                         kindLabels = {
                             Text = "",
                             Method = "",
@@ -255,70 +270,6 @@ _G.prepare_packer = function()
                 vim.fn['ddc_nvim_lsp_doc#enable']()
             end
         }
-
-        --[[
-        use {
-            'hrsh7th/nvim-compe',
-            config = function()
-                require'compe'.setup {
-                    enabled = true,
-                    autocomplete = true,
-                    source = {path = true, buffer = true, nvim_lsp = true},
-                    preselect = 'always',
-                    documentation = {border = 'single'}
-                }
-
-                -- Map compe confirm and complete functions
-                vim.api.nvim_set_keymap('i', '<cr>', 'compe#confirm("<cr>")',
-                                        {expr = true})
-                vim.api.nvim_set_keymap('i', '<c-space>', 'compe#complete()',
-                                        {expr = true})
-
-                local t = function(str)
-                    return vim.api.nvim_replace_termcodes(str, true, true, true)
-                end
-
-                local check_back_space = function()
-                    local col = vim.fn.col('.') - 1
-                    return col == 0 or
-                               vim.fn.getline('.'):sub(col, col):match('%s') ~=
-                               nil
-                end
-
-                -- Use (s-)tab to:
-                --- move to prev/next item in completion menuone
-                --- jump to prev/next snippet's placeholder
-                _G.tab_complete = function()
-                    if vim.fn.pumvisible() == 1 then
-                        return t "<C-n>"
-                    elseif check_back_space() then
-                        return t "<Tab>"
-                    else
-                        return vim.fn['compe#complete']()
-                    end
-                end
-                _G.s_tab_complete = function()
-                    if vim.fn.pumvisible() == 1 then
-                        return t "<C-p>"
-                    else
-                        -- If <S-Tab> is not working in your terminal, change it to <C-h>
-                        return t "<S-Tab>"
-                    end
-                end
-
-                vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()",
-                                        {expr = true})
-                vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()",
-                                        {expr = true})
-                vim.api.nvim_set_keymap("i", "<S-Tab>",
-                                        "v:lua.s_tab_complete()", {expr = true})
-                vim.api.nvim_set_keymap("s", "<S-Tab>",
-                                        "v:lua.s_tab_complete()", {expr = true})
-
-            end
-        }
-        ]]
-
     end)
 end
 
@@ -395,6 +346,7 @@ _G.setup_lsp = function()
     nvim_lsp.denols.setup {
         on_attach = on_attach,
         capabilities = require'lsp-status'.capabilities,
+        autostart = false,
         flags = {debounce_text_changes = 150}
     }
 
