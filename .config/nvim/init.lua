@@ -195,11 +195,59 @@ _G.prepare_packer = function()
             'neovim/nvim-lspconfig',
             requires = {
                 'nvim-lua/lsp-status.nvim', 'simrat39/rust-tools.nvim',
-                --'onsails/lspkind-nvim'
+                'ray-x/lsp_signature.nvim',
             },
             config = function() _G.setup_lsp() end
         }
 
+        use {
+            'Saecki/crates.nvim',
+            requires = { 'nvim-lua/plenary.nvim' },
+            config = function()
+                require('crates').setup {}
+            end
+        }
+
+        use {
+            'hrsh7th/nvim-cmp',
+            requires = {
+                'hrsh7th/cmp-nvim-lsp',
+                'hrsh7th/cmp-buffer',
+                'hrsh7th/nvim-cmp',
+                'hrsh7th/cmp-path',
+                'onsails/lspkind-nvim',
+                'Saecki/crates.nvim',
+            },
+            config = function()
+                local cmp = require'cmp'
+                local lspkind = require'lspkind'
+
+                lspkind.init { }
+
+                cmp.setup {
+                    mapping = {
+                        ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+                        ['<C-f>'] = cmp.mapping.scroll_docs(4),
+                        ['<C-Space>'] = cmp.mapping.complete(),
+                        ['<C-e>'] = cmp.mapping.close(),
+                        ['<CR>'] = cmp.mapping.confirm({ select = true }),
+                    },
+                    sources = {
+                        { name = 'nvim_lsp' },
+                        { name = 'buffer' },
+                        { name = 'path' },
+                        { name = "crates" },
+                    },
+                    formatting = {
+                        format = function(entry, vim_item)
+                            vim_item.kind = lspkind.presets.default[vim_item.kind]
+                            return vim_item
+                        end
+                    },
+                }
+            end
+        }
+        --[==[
         use {
             'Shougo/ddc.vim',
             requires = {
@@ -270,6 +318,7 @@ _G.prepare_packer = function()
                 vim.fn['ddc_nvim_lsp_doc#enable']()
             end
         }
+        ]==]
     end)
 end
 
@@ -330,6 +379,10 @@ _G.setup_lsp = function()
 
         -- added
         require'lsp-status'.on_attach(client, bufnr)
+        -- nvim-cmp
+        capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+        -- lsp_signature
+        require "lsp_signature".on_attach()
     end
 
     -- Use a loop to conveniently call 'setup' on multiple servers and
@@ -371,8 +424,6 @@ _G.setup_lsp = function()
         local hl = "LspDiagnosticsSign" .. type
         vim.fn.sign_define(hl, {text = icon, texthl = hl, numhl = ""})
     end
-
-    --require'lspkind'.init()
 end
 
 -- vim:set sw=2 ts=2 sts=2:
