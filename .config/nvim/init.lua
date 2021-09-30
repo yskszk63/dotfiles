@@ -62,6 +62,8 @@ vim.cmd [[autocmd TermOpen * setlocal signcolumn=]]
 
 vim.cmd [[autocmd FileType go setlocal noexpandtab]]
 
+vim.cmd [[autocmd FileType typescript setlocal ts=2 sts=2 sw=2]]
+
 -- External packages.
 
 -- packer.nvim wrapper.
@@ -217,6 +219,8 @@ _G.prepare_packer = function()
                 'hrsh7th/cmp-path',
                 'onsails/lspkind-nvim',
                 'Saecki/crates.nvim',
+                'L3MON4D3/LuaSnip',
+                'saadparwaiz1/cmp_luasnip',
             },
             config = function()
                 local cmp = require'cmp'
@@ -225,6 +229,17 @@ _G.prepare_packer = function()
                 lspkind.init { }
 
                 cmp.setup {
+                    snippet = {
+                      expand = function(args)
+                        require('luasnip').lsp_expand(args.body)
+                        -- empty
+                        -- Suppress error below.
+                        -- 
+                        -- E5108: Error executing lua ...te/pack/packer/start/nvim-cmp/lua/cmp/config/default.lua:26:
+                        --   snippet engine is not configured.
+
+                      end
+                    },
                     mapping = {
                         ['<C-d>'] = cmp.mapping.scroll_docs(-4),
                         ['<C-f>'] = cmp.mapping.scroll_docs(4),
