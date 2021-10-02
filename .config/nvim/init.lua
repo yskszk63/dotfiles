@@ -170,6 +170,7 @@ _G.prepare_packer = function()
         use {
             'kyazdani42/nvim-tree.lua',
             config = function()
+                require'nvim-tree'.setup{}
                 vim.api.nvim_set_keymap('n', '<C-n>', [[:NvimTreeToggle<CR>]],
                                         {noremap = true, silent = true})
             end
@@ -221,6 +222,7 @@ _G.prepare_packer = function()
                 'Saecki/crates.nvim',
                 'L3MON4D3/LuaSnip',
                 'saadparwaiz1/cmp_luasnip',
+                'rinx/cmp-skkeleton',
             },
             config = function()
                 local cmp = require'cmp'
@@ -252,6 +254,7 @@ _G.prepare_packer = function()
                         { name = 'buffer' },
                         { name = 'path' },
                         { name = "crates" },
+                        { name = 'skkeleton' },
                     },
                     formatting = {
                         format = function(entry, vim_item)
