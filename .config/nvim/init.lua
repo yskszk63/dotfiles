@@ -95,7 +95,7 @@ _G.prepare_packer = function()
         --use 'sunjon/extmark-toy.nvim'
 
         use {
-          'vim-skk/denops-skkeleton.vim',
+          'vim-skk/skkeleton',
           requires = {
             'vim-denops/denops.vim'
           },
@@ -105,6 +105,10 @@ _G.prepare_packer = function()
             vim.fn['skkeleton#config'] {
               eggLikeNewline = true,
               showCandidatesCount = 65535,
+              --markerHenkan = '﬍',
+              --markerHenkanSelect = 'ﳳ',
+              markerHenkan = '',
+              markerHenkanSelect = '',
             }
           end
         }
