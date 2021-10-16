@@ -47,10 +47,28 @@ vim.cmd [[
   augroup END
 ]]
 
+_G.spliterm = function()
+  local w = vim.fn.winwidth(0)
+  if w > (80 * 2) then
+    vim.api.nvim_exec([[
+      rightbelow vsplit
+      terminal
+      startinsert
+    ]], false)
+  else
+    vim.api.nvim_exec([[
+      botright split
+      terminal
+      startinsert
+    ]], false)
+  end
+end
+
 -- keymap for terminal
 vim.api.nvim_set_keymap('t', '<ESC>', [[<C-\><C-n>]],
                         {noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', '@t', [[:botright split<CR>:terminal<CR>i]],
+--vim.api.nvim_set_keymap('n', '@t', [[:botright split<CR>:terminal<CR>i]],
+vim.api.nvim_set_keymap('n', '@t', [[:lua _G.spliterm()<CR>]],
                         {noremap = true})
 vim.api.nvim_set_keymap('n', '@T', [[:tabnew<CR>:terminal<CR>i]],
                         {noremap = true})
@@ -92,8 +110,6 @@ _G.prepare_packer = function()
 
         use 'seandewar/nvimesweeper'
 
-        --use 'sunjon/extmark-toy.nvim'
-
         use {
           'vim-skk/skkeleton',
           requires = {
@@ -103,8 +119,10 @@ _G.prepare_packer = function()
             vim.api.nvim_set_keymap('i', '<C-j>', [[<Plug>(skkeleton-toggle)]], {})
             vim.api.nvim_set_keymap('c', '<C-j>', [[<Plug>(skkeleton-toggle)]], {})
             vim.fn['skkeleton#config'] {
-              eggLikeNewline = true,
-              showCandidatesCount = 65535,
+              tabCompletion = false,
+              usePopup = false,
+              --eggLikeNewline = true,
+              --showCandidatesCount = 65535,
               --markerHenkan = '﬍',
               --markerHenkanSelect = 'ﳳ',
               markerHenkan = '',
@@ -269,78 +287,6 @@ _G.prepare_packer = function()
                 }
             end
         }
-        --[==[
-        use {
-            'Shougo/ddc.vim',
-            requires = {
-                'vim-denops/denops.vim',
-                'Shougo/ddc-nvim-lsp',
-                'matsui54/ddc-nvim-lsp-doc',
-                'Shougo/ddc-around',
-                'Shougo/ddc-matcher_head',
-                'Shougo/ddc-sorter_rank',
-            },
-            config = function()
-                vim.api.nvim_set_keymap('i', '<c-space>', 'ddc#manual_complete()',
-                                        {expr = true, noremap = true})
-                vim.fn['ddc#custom#patch_global']('sources', {'nvim-lsp', 'skkeleton', 'around'})
-                vim.fn['ddc#custom#patch_global']('sourceOptions', {
-                    ['_'] = {
-                        matchers = {'matcher_head'},
-                        sorters = {'sorter_rank'},
-                    },
-                    ['nvim-lsp'] = {
-                        mark = 'LSP',
-                        forceCompletionPattern = [[\.\w*|:\w*|->\w*]],
-                    },
-                    skkeleton = {
-                        mark = 'SKK',
-                        matchers = {'skkeleton'},
-                        sorters = {},
-                    },
-                    around = {
-                        mark = 'A',
-                    },
-                })
-                vim.fn['ddc#custom#patch_global']('sourceParams', {
-                    ['nvim-lsp'] = {
-                        kindLabels = {
-                            Text = "",
-                            Method = "",
-                            Function = "",
-                            Constructor = "",
-                            Field = "ﰠ",
-                            Variable = "",
-                            Class = "ﴯ",
-                            Interface = "",
-                            Module = "",
-                            Property = "ﰠ",
-                            Unit = "塞",
-                            Value = "",
-                            Enum = "",
-                            Keyword = "",
-                            Snippet = "",
-                            Color = "",
-                            File = "",
-                            Reference = "",
-                            Folder = "",
-                            EnumMember = "",
-                            Constant = "",
-                            Struct = "פּ",
-                            Event = "",
-                            Operator = "",
-                            TypeParameter = "",
-                        },
-                    },
-                    around = {
-                        --maxSize = 500,
-                    },
-                })
-                vim.fn['ddc#enable']()
-                vim.fn['ddc_nvim_lsp_doc#enable']()
-            end
-        }
-        ]==]
     end)
 end
 
