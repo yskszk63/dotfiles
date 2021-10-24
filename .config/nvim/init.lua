@@ -113,21 +113,27 @@ _G.prepare_packer = function()
         use {
           'vim-skk/skkeleton',
           requires = {
-            'vim-denops/denops.vim'
+            'vim-denops/denops.vim',
+            'delphinus/skkeleton_indicator.nvim',
           },
           config = function()
-            vim.api.nvim_set_keymap('i', '<C-j>', [[<Plug>(skkeleton-toggle)]], {})
-            vim.api.nvim_set_keymap('c', '<C-j>', [[<Plug>(skkeleton-toggle)]], {})
-            vim.fn['skkeleton#config'] {
-              tabCompletion = false,
-              usePopup = false,
-              --eggLikeNewline = true,
-              --showCandidatesCount = 65535,
-              --markerHenkan = '﬍',
-              --markerHenkanSelect = 'ﳳ',
-              markerHenkan = '',
-              markerHenkanSelect = '',
-            }
+            vim.api.nvim_set_keymap('i', '<C-j>', [[<Plug>(skkeleton-enable)]], {})
+            vim.api.nvim_set_keymap('c', '<C-j>', [[<Plug>(skkeleton-enable)]], {})
+            _G.skkeleton_init = function()
+              vim.fn['skkeleton#config'] {
+                tabCompletion = true,
+                usePopup = true,
+                --eggLikeNewline = true,
+                --showCandidatesCount = 65535,
+                markerHenkan = '﬍',
+                markerHenkanSelect = 'ﳳ',
+                --markerHenkan = '',
+                --markerHenkanSelect = '',
+              }
+              require'skkeleton_indicator'.setup{}
+            end
+
+            vim.cmd [[autocmd User skkeleton-initialize-pre lua _G.skkeleton_init()]]
           end
         }
 
@@ -244,7 +250,7 @@ _G.prepare_packer = function()
                 'Saecki/crates.nvim',
                 'L3MON4D3/LuaSnip',
                 'saadparwaiz1/cmp_luasnip',
-                'rinx/cmp-skkeleton',
+                --'rinx/cmp-skkeleton',
             },
             config = function()
                 local cmp = require'cmp'
@@ -276,7 +282,7 @@ _G.prepare_packer = function()
                         { name = 'buffer' },
                         { name = 'path' },
                         { name = "crates" },
-                        { name = 'skkeleton' },
+                        --{ name = 'skkeleton' },
                     },
                     formatting = {
                         format = function(entry, vim_item)
@@ -284,6 +290,11 @@ _G.prepare_packer = function()
                             return vim_item
                         end
                     },
+                    --[==[
+                    experimental = {
+                        native_menu = true
+                    },
+                    ]==]
                 }
             end
         }
@@ -312,7 +323,8 @@ _G.setup_lsp = function()
 
         -- See `:help vim.lsp.*` for documentation on any of the below functions
         buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-        buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+        --buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+        buf_set_keymap('n', 'gd', '<cmd>tab split | lua vim.lsp.buf.definition()<cr>', opts)
         buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
         buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>',
                        opts)
@@ -365,6 +377,7 @@ _G.setup_lsp = function()
     end
 
     nvim_lsp.denols.setup {
+        cmd = { "deno", "lsp", "--unstable"},
         on_attach = on_attach,
         capabilities = require'lsp-status'.capabilities,
         autostart = false,
