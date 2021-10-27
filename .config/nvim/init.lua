@@ -125,8 +125,8 @@ _G.prepare_packer = function()
                 usePopup = true,
                 --eggLikeNewline = true,
                 --showCandidatesCount = 65535,
-                markerHenkan = '﬍',
-                markerHenkanSelect = 'ﳳ',
+                markerHenkan = '﬍ ',
+                markerHenkanSelect = 'ﳳ ',
                 --markerHenkan = '',
                 --markerHenkanSelect = '',
               }
