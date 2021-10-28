@@ -111,6 +111,11 @@ _G.prepare_packer = function()
         use 'seandewar/nvimesweeper'
 
         use {
+          'github/copilot.vim',
+          disable = vim.api.nvim_call_function('has', {'nvim-0.6'}) == 0,
+        }
+
+        use {
           'vim-skk/skkeleton',
           requires = {
             'vim-denops/denops.vim',
