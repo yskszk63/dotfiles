@@ -10,7 +10,7 @@ vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.cursorline = true
 vim.opt.termguicolors = true
-vim.opt.completeopt = {"menuone", "noselect"}
+vim.opt.completeopt = {"menu", "menuone", "noselect"}
 vim.opt.pumblend = 20
 vim.opt.winblend = 20
 vim.opt.clipboard = vim.opt.clipboard + {"unnamedplus"}
@@ -74,13 +74,12 @@ vim.api.nvim_set_keymap('n', '@T', [[:tabnew<CR>:terminal<CR>i]],
                         {noremap = true})
 
 -- no term number
-vim.cmd [[autocmd TermOpen * setlocal nonumber]]
-vim.cmd [[autocmd TermOpen * setlocal norelativenumber]]
-vim.cmd [[autocmd TermOpen * setlocal signcolumn=]]
+vim.cmd [[autocmd TermOpen * setlocal nonumber norelativenumber signcolumn=]]
 
 vim.cmd [[autocmd FileType go setlocal noexpandtab]]
 
 vim.cmd [[autocmd FileType typescript setlocal ts=2 sts=2 sw=2]]
+vim.cmd [[autocmd FileType typescriptreact setlocal ts=2 sts=2 sw=2]]
 
 -- External packages.
 
@@ -249,13 +248,13 @@ _G.prepare_packer = function()
             requires = {
                 'hrsh7th/cmp-nvim-lsp',
                 'hrsh7th/cmp-buffer',
-                'hrsh7th/nvim-cmp',
                 'hrsh7th/cmp-path',
                 'onsails/lspkind-nvim',
                 'Saecki/crates.nvim',
                 'L3MON4D3/LuaSnip',
                 'saadparwaiz1/cmp_luasnip',
                 --'rinx/cmp-skkeleton',
+                'hrsh7th/cmp-cmdline',
             },
             config = function()
                 local cmp = require'cmp'
@@ -276,19 +275,43 @@ _G.prepare_packer = function()
                       end
                     },
                     mapping = {
-                        ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-                        ['<C-f>'] = cmp.mapping.scroll_docs(4),
-                        ['<C-Space>'] = cmp.mapping.complete(),
-                        ['<C-e>'] = cmp.mapping.close(),
+                        ['<C-d>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
+                        ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
+                        ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
+                        ['<C-y>'] = cmp.config.disable, -- Specify `cmp.config.disable` if you want to remove the default `<C-y>` mapping.
+                        ['<C-e>'] = cmp.mapping({
+                            i = cmp.mapping.abort(),
+                            c = cmp.mapping.close(),
+                        }),
                         ['<CR>'] = cmp.mapping.confirm({ select = true }),
+                        ['<Tab>'] = cmp.mapping(cmp.mapping.select_next_item(), { 'i', 's' })
                     },
-                    sources = {
+                    sources = cmp.config.sources({
                         { name = 'nvim_lsp' },
                         { name = 'buffer' },
                         { name = 'path' },
                         { name = "crates" },
                         --{ name = 'skkeleton' },
-                    },
+                    }, {
+                        { name = 'buffer' },
+                    }),
+
+                    -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
+                    cmp.setup.cmdline('/', {
+                        sources = {
+                            { name = 'buffer' }
+                        }
+                    }),
+
+                    -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+                    cmp.setup.cmdline(':', {
+                        sources = cmp.config.sources({
+                            { name = 'path' }
+                        }, {
+                            { name = 'cmdline' }
+                        })
+                    }),
+
                     formatting = {
                         format = function(entry, vim_item)
                             vim_item.kind = lspkind.presets.default[vim_item.kind]
@@ -367,7 +390,13 @@ _G.setup_lsp = function()
         -- nvim-cmp
         capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
         -- lsp_signature
-        require "lsp_signature".on_attach()
+        require "lsp_signature".on_attach({
+            bind = true,
+            handler_opts = {
+                border = "double"
+            },
+            hint_prefix = "💡 ",
+        }, bufnr)
     end
 
     -- Use a loop to conveniently call 'setup' on multiple servers and
