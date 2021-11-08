@@ -81,6 +81,8 @@ vim.cmd [[autocmd FileType go setlocal noexpandtab]]
 vim.cmd [[autocmd FileType typescript setlocal ts=2 sts=2 sw=2]]
 vim.cmd [[autocmd FileType typescriptreact setlocal ts=2 sts=2 sw=2]]
 
+vim.cmd [[autocmd FileType json setlocal ts=2 sts=2 sw=2]]
+
 -- External packages.
 
 -- packer.nvim wrapper.
@@ -107,7 +109,7 @@ _G.prepare_packer = function()
     require'packer'.startup(function()
         use {'wbthomason/packer.nvim', opt = true}
 
-        use 'seandewar/nvimesweeper'
+        --use 'seandewar/nvimesweeper'
 
         use {
           'github/copilot.vim',
@@ -144,7 +146,8 @@ _G.prepare_packer = function()
         use {
             'sainnhe/sonokai',
             config = function()
-                vim.g.sonokai_style = 'andromeda'
+                --vim.g.sonokai_style = 'andromeda'
+                vim.g.sonokai_style = 'default'
                 vim.g.sonokai_enable_italic = 1
                 vim.g.sonokai_transparent_background = 1
                 vim.g.sonokai_diagnostic_text_highlight = 1
