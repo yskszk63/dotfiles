@@ -41,7 +41,7 @@ SAVEHIST=1000
 
 setopt share_history
 
-export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$HOME/.deno/bin:$HOME/.go/bin:$PATH"
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$HOME/.deno/bin:$HOME/.go/bin:$HOME/.npm/bin:$PATH"
 export GOPATH=~/.go
 
 zinit ice depth=1

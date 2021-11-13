@@ -82,6 +82,7 @@ vim.cmd [[autocmd FileType typescript setlocal ts=2 sts=2 sw=2]]
 vim.cmd [[autocmd FileType typescriptreact setlocal ts=2 sts=2 sw=2]]
 
 vim.cmd [[autocmd FileType json setlocal ts=2 sts=2 sw=2]]
+vim.cmd [[autocmd FileType html setlocal ts=2 sts=2 sw=2]]
 
 -- External packages.
 
@@ -109,6 +110,7 @@ _G.prepare_packer = function()
     require'packer'.startup(function()
         use {'wbthomason/packer.nvim', opt = true}
 
+        --use 'mattn/emmet-vim'
         --use 'seandewar/nvimesweeper'
 
         use {
@@ -333,7 +335,21 @@ _G.prepare_packer = function()
 end
 
 _G.setup_lsp = function()
-    local nvim_lsp = require('lspconfig')
+    local configs = require'lspconfig/configs'
+
+    configs.ls_emmet = {
+      default_config = {
+        cmd = { 'ls_emmet', '--stdio' };
+        filetypes = { 'html', 'css', 'scss', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'haml', 'xml', 'xsl', 'pug', 'slim', 'sass', 'stylus', 'less', 'sss'};
+        root_dir = function(fname)
+          return vim.loop.cwd()
+        end;
+        settings = {};
+      }
+    }
+
+    local nvim_lsp = require'lspconfig'
+
     -- https://github.com/neovim/nvim-lspconfig#keybindings-and-completion
 
     -- Use an on_attach function to only map the following keys
@@ -420,6 +436,15 @@ _G.setup_lsp = function()
         autostart = false,
         flags = {debounce_text_changes = 150}
     }
+
+    if nvim_lsp.ls_emmet ~= nil and nvim_lsp.ls_emmet.setup ~= nil then
+      local ls_emmet_cap = vim.lsp.protocol.make_client_capabilities()
+      ls_emmet_cap.textDocument.completion.completionItem.snippetSupport = true
+      nvim_lsp.ls_emmet.setup{
+        on_attach = on_attach,
+        capabilities = capabilities
+      }
+    end
 
     require'rust-tools'.setup {
         autostart = false,
