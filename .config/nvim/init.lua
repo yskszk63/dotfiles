@@ -337,6 +337,7 @@ end
 _G.setup_lsp = function()
     local configs = require'lspconfig/configs'
 
+    --[==[
     configs.ls_emmet = {
       default_config = {
         cmd = { 'ls_emmet', '--stdio' };
@@ -347,6 +348,7 @@ _G.setup_lsp = function()
         settings = {};
       }
     }
+    ]==]
 
     local nvim_lsp = require'lspconfig'
 
