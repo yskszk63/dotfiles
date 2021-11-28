@@ -440,6 +440,7 @@ _G.setup_lsp = function()
         flags = {debounce_text_changes = 150}
     }
 
+    --[==[
     if nvim_lsp.ls_emmet ~= nil and nvim_lsp.ls_emmet.setup ~= nil then
       local ls_emmet_cap = vim.lsp.protocol.make_client_capabilities()
       ls_emmet_cap.textDocument.completion.completionItem.snippetSupport = true
@@ -448,6 +449,7 @@ _G.setup_lsp = function()
         capabilities = capabilities
       }
     end
+    ]==]
 
     require'rust-tools'.setup {
         autostart = false,
