@@ -124,6 +124,7 @@ _G.prepare_packer = function()
             'vim-denops/denops.vim',
             'delphinus/skkeleton_indicator.nvim',
           },
+          disable = vim.fn.executable("zsh") ~= 1,
           config = function()
             vim.api.nvim_set_keymap('i', '<C-j>', [[<Plug>(skkeleton-enable)]], {})
             vim.api.nvim_set_keymap('c', '<C-j>', [[<Plug>(skkeleton-enable)]], {})
