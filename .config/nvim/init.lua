@@ -134,9 +134,22 @@ _G.prepare_packer = function()
         use 'mattn/emmet-vim'
         --use 'seandewar/nvimesweeper'
 
+        use 'nathom/filetype.nvim'
+
         use {
           'github/copilot.vim',
+          opt = true,
           disable = vim.api.nvim_call_function('has', {'nvim-0.6'}) == 0,
+          setup = function()
+            vim.cmd [[imap <script><silent><nowait><expr> <C-L> copilot#Accept()]]
+            vim.g.copilot_no_tab_map = true
+            -- copilot disable by default.
+            --[==[
+            vim.g.copilot_filetypes = {
+              ["*"] = false,
+            }
+            ]==]
+          end
         }
 
         use {
