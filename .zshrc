@@ -60,5 +60,7 @@ which renvim > /dev/null 2>&1 && {
     alias vi=$EDITOR
 }
 
+[[ ! -f /opt/asdf-vm/asdf.sh ]] || source /opt/asdf-vm/asdf.sh
+
 autoload -Uz compinit
 compinit

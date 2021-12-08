@@ -88,12 +88,12 @@ vim.cmd [[autocmd FileType html setlocal ts=2 sts=2 sw=2]]
 
 vim.g.did_install_default_menus = 1
 vim.g.did_install_syntax_menu   = 1
-vim.g.did_indent_on             = 1
-vim.g.did_load_filetypes        = 1
-vim.g.did_load_ftplugin         = 1
+--vim.g.did_indent_on             = 1
+--vim.g.did_load_filetypes        = 1
+--vim.g.did_load_ftplugin         = 1
 vim.g.loaded_2html_plugin       = 1
 vim.g.loaded_gzip               = 1
-vim.g.loaded_man                = 1
+--vim.g.loaded_man                = 1
 vim.g.loaded_matchit            = 1
 vim.g.loaded_matchparen         = 1
 vim.g.loaded_netrwPlugin        = 1
@@ -134,7 +134,7 @@ _G.prepare_packer = function()
         use 'mattn/emmet-vim'
         --use 'seandewar/nvimesweeper'
 
-        use 'nathom/filetype.nvim'
+        --use 'nathom/filetype.nvim'
 
         use {
           'github/copilot.vim',
@@ -156,7 +156,7 @@ _G.prepare_packer = function()
           'vim-skk/skkeleton',
           requires = {
             'vim-denops/denops.vim',
-            'delphinus/skkeleton_indicator.nvim',
+            --'delphinus/skkeleton_indicator.nvim',
           },
           disable = vim.fn.executable("zsh") ~= 1,
           config = function()
@@ -465,6 +465,18 @@ _G.setup_lsp = function()
             flags = {debounce_text_changes = 150}
         }
     end
+
+    nvim_lsp.java_language_server.setup {
+        cmd = { "java-language-server" },
+        settings = {
+            java = {
+                home = "/home/yskszk63/.asdf/installs/java/openjdk-17.0.1",
+                --addExports = { "jdk.incubator.foreign/jdk.incubator.foreign" },
+            },
+        },
+        on_attach = on_attach,
+        capabilities = require'lsp-status'.capabilities,
+    }
 
     nvim_lsp.denols.setup {
         cmd = { "deno", "lsp", "--unstable"},
