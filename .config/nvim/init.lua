@@ -16,6 +16,9 @@ vim.opt.winblend = 20
 vim.opt.clipboard = vim.opt.clipboard + {"unnamedplus"}
 if vim.fn.executable("zsh") == 1 then vim.opt.sh = "zsh" end
 
+-- Revert old behavior for https://github.com/neovim/neovim/pull/13268
+vim.cmd [[nunmap Y]]
+
 vim.g.vimsyn_embed = 'l'
 vim.g.mapleader = [[ ]]
 
