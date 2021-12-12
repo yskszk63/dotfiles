@@ -135,23 +135,14 @@ _G.prepare_packer = function()
         use {'wbthomason/packer.nvim', opt = true}
 
         use 'mattn/emmet-vim'
-        --use 'seandewar/nvimesweeper'
-
-        --use 'nathom/filetype.nvim'
 
         use {
           'github/copilot.vim',
           opt = true,
           disable = vim.api.nvim_call_function('has', {'nvim-0.6'}) == 0,
           setup = function()
-            vim.cmd [[imap <script><silent><nowait><expr> <C-L> copilot#Accept()]]
+            vim.api.nvim_set_keymap('i', '<C-L>', 'copilot#Accept()', { script=true, silent=true, nowait=true, expr=true })
             vim.g.copilot_no_tab_map = true
-            -- copilot disable by default.
-            --[==[
-            vim.g.copilot_filetypes = {
-              ["*"] = false,
-            }
-            ]==]
           end
         }
 
@@ -374,20 +365,6 @@ end
 
 _G.setup_lsp = function()
     local configs = require'lspconfig/configs'
-
-    --[==[
-    configs.ls_emmet = {
-      default_config = {
-        cmd = { 'ls_emmet', '--stdio' };
-        filetypes = { 'html', 'css', 'scss', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'haml', 'xml', 'xsl', 'pug', 'slim', 'sass', 'stylus', 'less', 'sss'};
-        root_dir = function(fname)
-          return vim.loop.cwd()
-        end;
-        settings = {};
-      }
-    }
-    ]==]
-
     local nvim_lsp = require'lspconfig'
 
     -- https://github.com/neovim/nvim-lspconfig#keybindings-and-completion
@@ -488,17 +465,6 @@ _G.setup_lsp = function()
         autostart = false,
         flags = {debounce_text_changes = 150}
     }
-
-    --[==[
-    if nvim_lsp.ls_emmet ~= nil and nvim_lsp.ls_emmet.setup ~= nil then
-      local ls_emmet_cap = vim.lsp.protocol.make_client_capabilities()
-      ls_emmet_cap.textDocument.completion.completionItem.snippetSupport = true
-      nvim_lsp.ls_emmet.setup{
-        on_attach = on_attach,
-        capabilities = capabilities
-      }
-    end
-    ]==]
 
     require'rust-tools'.setup {
         autostart = false,
