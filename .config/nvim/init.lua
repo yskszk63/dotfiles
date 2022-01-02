@@ -77,7 +77,7 @@ vim.api.nvim_set_keymap('n', '@T', [[:tabnew<CR>:terminal<CR>i]],
                         {noremap = true})
 
 -- no term number
-vim.cmd [[autocmd TermOpen * setlocal nonumber norelativenumber signcolumn=]]
+vim.cmd [[autocmd TermOpen * setlocal nonumber norelativenumber signcolumn=no]]
 
 vim.cmd [[autocmd FileType go setlocal noexpandtab]]
 
@@ -442,7 +442,8 @@ _G.setup_lsp = function()
         nvim_lsp[lsp].setup {
             on_attach = on_attach,
             capabilities = require'lsp-status'.capabilities,
-            flags = {debounce_text_changes = 150}
+            flags = {debounce_text_changes = 150},
+            autostart = false,
         }
     end
 
@@ -459,10 +460,11 @@ _G.setup_lsp = function()
     }
 
     nvim_lsp.denols.setup {
-        cmd = { "deno", "lsp", "--unstable"},
+        cmd = { "deno-lsp"},
+        --cmd = { "deno", "lsp", "--unstable", "-Ldebug"},
         on_attach = on_attach,
         capabilities = require'lsp-status'.capabilities,
-        autostart = false,
+        --autostart = false,
         flags = {debounce_text_changes = 150}
     }
 
