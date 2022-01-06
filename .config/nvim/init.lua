@@ -68,13 +68,9 @@ _G.spliterm = function()
 end
 
 -- keymap for terminal
-vim.api.nvim_set_keymap('t', '<ESC>', [[<C-\><C-n>]],
-                        {noremap = true, silent = true})
---vim.api.nvim_set_keymap('n', '@t', [[:botright split<CR>:terminal<CR>i]],
-vim.api.nvim_set_keymap('n', '@t', [[:lua _G.spliterm()<CR>]],
-                        {noremap = true})
-vim.api.nvim_set_keymap('n', '@T', [[:tabnew<CR>:terminal<CR>i]],
-                        {noremap = true})
+vim.api.nvim_set_keymap('t', '<ESC>', [[<C-\><C-n>]], {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '@t', [[:lua _G.spliterm()<CR>]], {noremap = true})
+vim.api.nvim_set_keymap('n', '@T', [[:tabnew<CR>:terminal<CR>i]], {noremap = true})
 
 -- no term number
 vim.cmd [[autocmd TermOpen * setlocal nonumber norelativenumber signcolumn=no]]
@@ -83,7 +79,6 @@ vim.cmd [[autocmd FileType go setlocal noexpandtab]]
 
 vim.cmd [[autocmd FileType typescript setlocal ts=2 sts=2 sw=2]]
 vim.cmd [[autocmd FileType typescriptreact setlocal ts=2 sts=2 sw=2]]
-
 vim.cmd [[autocmd FileType json setlocal ts=2 sts=2 sw=2]]
 vim.cmd [[autocmd FileType html setlocal ts=2 sts=2 sw=2]]
 
@@ -120,8 +115,7 @@ vim.cmd [[command! PackerCompile call v:lua.prepare_packer() | lua require('pack
 _G.prepare_packer = function()
     -- packer.nvim bootstrap
     -- https://github.com/wbthomason/packer.nvim#bootstrapping
-    local install_path = vim.fn.stdpath('data') ..
-                             '/site/pack/packer/opt/packer.nvim'
+    local install_path = vim.fn.stdpath('data') .. '/site/pack/packer/opt/packer.nvim'
 
     if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
         vim.fn.system({
@@ -150,9 +144,8 @@ _G.prepare_packer = function()
           'vim-skk/skkeleton',
           requires = {
             'vim-denops/denops.vim',
-            --'delphinus/skkeleton_indicator.nvim',
           },
-          disable = vim.fn.executable("zsh") ~= 1,
+          disable = vim.fn.executable("deno") ~= 1,
           config = function()
             vim.api.nvim_set_keymap('i', '<C-j>', [[<Plug>(skkeleton-enable)]], {})
             vim.api.nvim_set_keymap('c', '<C-j>', [[<Plug>(skkeleton-enable)]], {})
@@ -160,17 +153,19 @@ _G.prepare_packer = function()
               vim.fn['skkeleton#config'] {
                 tabCompletion = true,
                 usePopup = true,
-                --eggLikeNewline = true,
+                eggLikeNewline = true,
                 --showCandidatesCount = 65535,
                 markerHenkan = '﬍ ',
                 markerHenkanSelect = 'ﳳ ',
-                --markerHenkan = '',
-                --markerHenkanSelect = '',
               }
-              require'skkeleton_indicator'.setup{}
             end
 
-            vim.cmd [[autocmd User skkeleton-initialize-pre lua _G.skkeleton_init()]]
+            vim.cmd [[
+              augroup skkeleton-initialize-pre
+                autocmd!
+                autocmd User skkeleton-initialize-pre lua _G.skkeleton_init()
+              augroup END
+            ]]
           end
         }
 
@@ -194,15 +189,13 @@ _G.prepare_packer = function()
             requires = {'nvim-lua/plenary.nvim'},
             config = function()
                 require'telescope'.setup {defaults = {color_devicons = false}}
-                vim.api.nvim_set_keymap('n', '<C-p>',
-                                        [[<cmd>lua require('telescope.builtin').find_files()<CR>]],
-                                        {noremap = true})
-                vim.api.nvim_set_keymap('n', '<Leader>b',
-                                        [[<cmd>lua require('telescope.builtin').buffers()<cr>]],
-                                        {noremap = true})
-                vim.api.nvim_set_keymap('n', '<Leader>rg',
-                                        [[<cmd>lua require('telescope.builtin').live_grep({ prompt_prefix="🔍" })<cr>]],
-                                        {noremap = true})
+                vim.api.nvim_set_keymap('n', '<C-p>', [[<cmd>lua require('telescope.builtin').find_files()<CR>]], {noremap = true})
+                vim.api.nvim_set_keymap('n', '<Leader>b', [[<cmd>lua require('telescope.builtin').buffers()<cr>]], {noremap = true})
+                vim.api.nvim_set_keymap('n', '<Leader>rg', [[<cmd>lua require('telescope.builtin').live_grep({ prompt_prefix="🔍" })<cr>]], {noremap = true})
+                vim.api.nvim_set_keymap('n', '<Leader>dl', [[<cmd>lua require('telescope.builtin').diagnostics{}<cr>]], {noremap = true})
+                vim.api.nvim_set_keymap('n', '<Leader>ca', [[<cmd>lua require('telescope.builtin').lsp_code_actions{}<cr>]], {noremap = true})
+                vim.api.nvim_set_keymap('n', '<Leader>rf', [[<cmd>lua require('telescope.builtin').lsp_references{}<cr>]], {noremap = true})
+                vim.api.nvim_set_keymap('n', '<Leader>ds', [[<cmd>lua require('telescope.builtin').lsp_document_symbols{}<cr>]], {noremap = true})
             end
         }
 
@@ -212,14 +205,16 @@ _G.prepare_packer = function()
 								'kyazdani42/nvim-web-devicons',
 								'lambdalisue/battery.vim',
 								'nvim-lua/lsp-status.nvim',
+                'sainnhe/sonokai',
+                'vim-skk/skkeleton',
 						},
 						config = function()
 							require('lualine').setup{
 									options = {
-											theme = 'ayu_dark'
+											theme = 'sonokai',
 									},
                   sections = {
-                      lualine_c = {'filename', 'battery#component', require'lsp-status'.status},
+                      lualine_c = {'filename', 'battery#component', 'skkeleton#mode', require'lsp-status'.status},
                   },
 							}
 						end
@@ -237,8 +232,7 @@ _G.prepare_packer = function()
             'kyazdani42/nvim-tree.lua',
             config = function()
                 require'nvim-tree'.setup{}
-                vim.api.nvim_set_keymap('n', '<C-n>', [[:NvimTreeToggle<CR>]],
-                                        {noremap = true, silent = true})
+                vim.api.nvim_set_keymap('n', '<C-n>', [[:NvimTreeToggle<CR>]], {noremap = true, silent = true})
             end
         }
 
@@ -246,8 +240,8 @@ _G.prepare_packer = function()
 
         use 'cespare/vim-toml'
         use 'rust-lang/rust.vim'
-        use 'andrejlevkovitch/vim-lua-format'
-        use 'ollykel/v-vim'
+        --use 'andrejlevkovitch/vim-lua-format'
+        --use 'ollykel/v-vim'
 
         use {'nvim-treesitter/nvim-treesitter', run = ':TSUpdate'}
 
@@ -258,12 +252,15 @@ _G.prepare_packer = function()
             end
         }
 
-        use {'anekos/runes-vim', opts = true}
+        --use {'anekos/runes-vim', opts = true}
+
+        use { 'ray-x/lsp_signature.nvim' }
 
         use {
             'neovim/nvim-lspconfig',
             requires = {
-                'nvim-lua/lsp-status.nvim', 'simrat39/rust-tools.nvim',
+                'nvim-lua/lsp-status.nvim',
+                'simrat39/rust-tools.nvim',
                 'ray-x/lsp_signature.nvim',
             },
             config = function() _G.setup_lsp() end
@@ -388,38 +385,22 @@ _G.setup_lsp = function()
         -- See `:help vim.lsp.*` for documentation on any of the below functions
         buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
         buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-        --buf_set_keymap('n', 'gd', '<cmd>tab split | lua vim.lsp.buf.definition()<cr>', opts)
         buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-        buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>',
-                       opts)
-        buf_set_keymap('n', '<C-k>',
-                       '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-        buf_set_keymap('n', '<space>wa',
-                       '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-        buf_set_keymap('n', '<space>wr',
-                       '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>',
-                       opts)
-        buf_set_keymap('n', '<space>wl',
-                       '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>',
-                       opts)
-        buf_set_keymap('n', '<space>D',
-                       '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-        buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>',
-                       opts)
-        buf_set_keymap('n', '<space>ca',
-                       '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+        buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+        buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+        buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+        buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+        buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+        buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+        buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+        --buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
         buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-        buf_set_keymap('n', '<space>e',
-                       '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>',
-                       opts)
-        buf_set_keymap('n', '[g', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>',
-                       opts)
-        buf_set_keymap('n', ']g', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>',
-                       opts)
-        buf_set_keymap('n', '<space>q',
-                       '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
-        buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>',
-                       opts)
+        --buf_set_keymap('n', '<leader>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+        buf_set_keymap('n', '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
+        buf_set_keymap('n', '[g', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+        buf_set_keymap('n', ']g', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+        buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+        buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 
         -- added
         require'lsp-status'.on_attach(client, bufnr)
