@@ -284,7 +284,6 @@ _G.prepare_packer = function()
                 'Saecki/crates.nvim',
                 'L3MON4D3/LuaSnip',
                 'saadparwaiz1/cmp_luasnip',
-                --'rinx/cmp-skkeleton',
                 'hrsh7th/cmp-cmdline',
             },
             config = function()
@@ -315,11 +314,9 @@ _G.prepare_packer = function()
                             c = cmp.mapping.close(),
                         }),
                         ['<CR>'] = cmp.mapping.confirm({ select = true }),
-                        ['<Tab>'] = cmp.mapping(cmp.mapping.select_next_item(), { 'i', 's' })
                     },
                     sources = cmp.config.sources({
                         { name = 'nvim_lsp' },
-                        { name = 'buffer' },
                         { name = 'path' },
                         { name = "crates" },
                         --{ name = 'skkeleton' },
@@ -344,16 +341,8 @@ _G.prepare_packer = function()
                     }),
 
                     formatting = {
-                        format = function(entry, vim_item)
-                            vim_item.kind = lspkind.presets.default[vim_item.kind]
-                            return vim_item
-                        end
+                        format = lspkind.cmp_format{ },
                     },
-                    --[==[
-                    experimental = {
-                        native_menu = true
-                    },
-                    ]==]
                 }
             end
         }
@@ -369,12 +358,8 @@ _G.setup_lsp = function()
     -- Use an on_attach function to only map the following keys
     -- after the language server attaches to the current buffer
     local on_attach = function(client, bufnr)
-        local function buf_set_keymap(...)
-            vim.api.nvim_buf_set_keymap(bufnr, ...)
-        end
-        local function buf_set_option(...)
-            vim.api.nvim_buf_set_option(bufnr, ...)
-        end
+        local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+        local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
         -- Enable completion triggered by <c-x><c-o>
         buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
@@ -388,14 +373,13 @@ _G.setup_lsp = function()
         buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
         buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
         buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-        buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-        buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-        buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-        buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-        buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+        buf_set_keymap('n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+        buf_set_keymap('n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+        buf_set_keymap('n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+        buf_set_keymap('n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+        buf_set_keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
         --buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
         buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-        --buf_set_keymap('n', '<leader>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
         buf_set_keymap('n', '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
         buf_set_keymap('n', '[g', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
         buf_set_keymap('n', ']g', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
@@ -404,49 +388,55 @@ _G.setup_lsp = function()
 
         -- added
         require'lsp-status'.on_attach(client, bufnr)
-        -- nvim-cmp
-        capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
         -- lsp_signature
         require "lsp_signature".on_attach({
             bind = true,
             handler_opts = {
                 border = "double"
             },
-            hint_prefix = "💡 ",
+            hint_prefix = " ",
         }, bufnr)
     end
 
-    -- Use a loop to conveniently call 'setup' on multiple servers and
-    -- map buffer local keybindings when the language server attaches
-    local servers = {'gopls', 'tsserver'}
-    for _, lsp in ipairs(servers) do
-        nvim_lsp[lsp].setup {
-            on_attach = on_attach,
-            capabilities = require'lsp-status'.capabilities,
-            flags = {debounce_text_changes = 150},
-            autostart = false,
-        }
-    end
+    capabilities = require'cmp_nvim_lsp'.update_capabilities(require'lsp-status'.capabilities)
 
-    nvim_lsp.java_language_server.setup {
-        cmd = { "java-language-server" },
-        settings = {
-            java = {
-                home = "/home/yskszk63/.asdf/installs/java/openjdk-17.0.1",
-                --addExports = { "jdk.incubator.foreign/jdk.incubator.foreign" },
-            },
-        },
+    nvim_lsp.gopls.setup {
         on_attach = on_attach,
-        capabilities = require'lsp-status'.capabilities,
+        capabilities = capabilities,
+        flags = {debounce_text_changes = 150},
     }
 
-    nvim_lsp.denols.setup {
-        cmd = { "deno-lsp"},
-        --cmd = { "deno", "lsp", "--unstable", "-Ldebug"},
-        on_attach = on_attach,
-        capabilities = require'lsp-status'.capabilities,
-        --autostart = false,
-        flags = {debounce_text_changes = 150}
+    if not require'lspconfig.configs'.dlsortls then
+      require'lspconfig.configs'.dlsortls = {
+        default_config = {
+          init_options = {
+            enable = true,
+            lint = false,
+            unstable = true,
+            hostInfo = 'neovim',
+          },
+          cmd = { "dlsortls" },
+          filetypes = {
+            'javascript',
+            'javascriptreact',
+            'javascript.jsx',
+            'typescript',
+            'typescriptreact',
+            'typescript.tsx',
+          },
+          root_dir = function(fname)
+            local util = require'lspconfig.util'
+            return util.root_pattern 'tsconfig.json'(fname)
+              or util.root_pattern('package.json', 'jsconfig.json', '.git')(fname)
+              or util.root_pattern('deno.json', 'deno.jsonc', 'tsconfig.json', '.git')
+          end,
+        }
+      }
+    end
+    nvim_lsp.dlsortls.setup {
+      on_attach = on_attach,
+      capabilities = capabilities,
+      flags = {debounce_text_changes = 150},
     }
 
     require'rust-tools'.setup {
@@ -454,7 +444,8 @@ _G.setup_lsp = function()
         server = {
             on_attach = on_attach,
             flags = {debounce_text_changes = 150},
-            settings = {["rust-analyzer"] = {diagnostics = {enable = false}}}
+            settings = {["rust-analyzer"] = {diagnostics = {enable = false}}},
+            capabilities = capabilities,
         }
     }
 
