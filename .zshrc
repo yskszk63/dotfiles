@@ -21,11 +21,11 @@ autoload -Uz _zinit
 
 # Load a few important annexes, without Turbo
 # (this is currently required for annexes)
-#zinit light-mode for \
-#    zinit-zsh/z-a-rust \
-#    zinit-zsh/z-a-as-monitor \
-#    zinit-zsh/z-a-patch-dl \
-#    zinit-zsh/z-a-bin-gem-node
+zinit light-mode for \
+    zdharma-continuum/z-a-rust \
+    zdharma-continuum/z-a-as-monitor \
+    zdharma-continuum/z-a-patch-dl \
+    zdharma-continuum/z-a-bin-gem-node
 
 ### End of Zinit's installer chunk
 
@@ -47,7 +47,7 @@ export GOPATH=~/.go
 zinit ice depth=1
 zinit light romkatv/powerlevel10k
 zinit light zsh-users/zsh-autosuggestions
-zinit light zsh-users/zsh-syntax-highlighting
+zinit light zdharma-continuum/fast-syntax-highlighting
 zinit light zsh-users/zsh-completions
 
 [[ ! -f /usr/share/fzf/key-bindings.zsh ]] || source /usr/share/fzf/key-bindings.zsh
