@@ -262,8 +262,26 @@ _G.prepare_packer = function()
                 'nvim-lua/lsp-status.nvim',
                 'simrat39/rust-tools.nvim',
                 'ray-x/lsp_signature.nvim',
+                'RRethy/vim-illuminate',
             },
             config = function() _G.setup_lsp() end
+        }
+
+        use {
+            'RRethy/vim-illuminate',
+            config = function()
+                vim.api.nvim_command [[ hi def link LspReferenceText CursorLine ]]
+                vim.api.nvim_command [[ hi def link LspReferenceWrite CursorLine ]]
+                vim.api.nvim_command [[ hi def link LspReferenceRead CursorLine ]]
+
+								vim.g.Illuminate_highlightUnderCursor = 0
+                vim.cmd [[
+                  augroup illuminate_augroup
+                      autocmd!
+                      autocmd VimEnter * hi illuminatedCurWord cterm=italic gui=italic
+                  augroup END
+                ]]
+            end
         }
 
         use {
@@ -396,6 +414,8 @@ _G.setup_lsp = function()
             },
             hint_prefix = " ",
         }, bufnr)
+        -- vim-illuminate
+        require'illuminate'.on_attach(client)
     end
 
     capabilities = require'cmp_nvim_lsp'.update_capabilities(require'lsp-status'.capabilities)
