@@ -64,3 +64,5 @@ which renvim > /dev/null 2>&1 && {
 
 autoload -Uz compinit
 compinit
+
+[[ ! -f ~/.zshrc.custom ]] || source ~/.zshrc.custom
