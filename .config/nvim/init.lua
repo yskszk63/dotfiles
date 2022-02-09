@@ -426,6 +426,8 @@ _G.setup_lsp = function()
         flags = {debounce_text_changes = 150},
     }
 
+    nvim_lsp.sqls.setup {}
+
     if not require'lspconfig.configs'.dlsortls then
       require'lspconfig.configs'.dlsortls = {
         default_config = {
