@@ -446,12 +446,7 @@ _G.setup_lsp = function()
             'typescriptreact',
             'typescript.tsx',
           },
-          root_dir = function(fname)
-            local util = require'lspconfig.util'
-            return util.root_pattern 'tsconfig.json'(fname)
-              or util.root_pattern('package.json', 'jsconfig.json', '.git')(fname)
-              or util.root_pattern('deno.json', 'deno.jsonc', 'tsconfig.json', '.git')
-          end,
+          root_dir = require'lspconfig.util'.root_pattern('tsconfig.json', 'package.json', 'jsconfig.json', '.git', 'deno.json', 'deno.jsonc'),
         }
       }
     end
