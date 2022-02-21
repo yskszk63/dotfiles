@@ -426,7 +426,11 @@ _G.setup_lsp = function()
         flags = {debounce_text_changes = 150},
     }
 
-    nvim_lsp.sqls.setup {}
+    nvim_lsp.sqls.setup {
+      on_attach = on_attach,
+      capabilities = capabilities,
+      flags = {debounce_text_changes = 150},
+    }
 
     if not require'lspconfig.configs'.dlsortls then
       require'lspconfig.configs'.dlsortls = {
@@ -465,6 +469,12 @@ _G.setup_lsp = function()
             capabilities = capabilities,
         }
     }
+
+  nvim_lsp.pyright.setup{
+      on_attach = on_attach,
+      capabilities = capabilities,
+      flags = {debounce_text_changes = 150},
+  }
 
     -- https://github.com/neovim/nvim-lspconfig/wiki/UI-customization#change-diagnostic-symbols-in-the-sign-column-gutter
     local signs = {
