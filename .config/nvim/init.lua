@@ -293,6 +293,13 @@ _G.prepare_packer = function()
         }
 
         use {
+          'mvllow/modes.nvim',
+          config = function()
+            require('modes').setup()
+          end
+        }
+
+        use {
             'hrsh7th/nvim-cmp',
             requires = {
                 'hrsh7th/cmp-nvim-lsp',
