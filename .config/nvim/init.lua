@@ -169,6 +169,26 @@ _G.prepare_packer = function()
           end
         }
 
+        --[==[
+        use {
+          'EdenEast/nightfox.nvim',
+          config = function()
+            require'nightfox'.setup({
+              options = {
+                --transparent = true,
+                styles = {
+                  comments = "italic",
+                  keywords = "bold",
+                  types = "italic,bold",
+                }
+              },
+            })
+
+            vim.cmd('colorscheme nightfox')
+          end
+        }
+        ]==]
+
         use {
             'sainnhe/sonokai',
             config = function()
@@ -207,14 +227,21 @@ _G.prepare_packer = function()
 								'nvim-lua/lsp-status.nvim',
                 'sainnhe/sonokai',
                 'vim-skk/skkeleton',
+                'SmiteshP/nvim-gps',
+                'nvim-treesitter/nvim-treesitter',
 						},
 						config = function()
+              local gps = require'nvim-gps'
+              gps.setup{}
+
 							require('lualine').setup{
 									options = {
+											--theme = 'nightfox',
 											theme = 'sonokai',
 									},
                   sections = {
-                      lualine_c = {'filename', 'battery#component', 'skkeleton#mode', require'lsp-status'.status},
+                      lualine_c = {'filename', 'battery#component', 'skkeleton#mode', require'lsp-status'.status, gps.get_location},
+                      --lualine_d = { , cond = gps.is_available },
                   },
 							}
 						end
@@ -299,6 +326,32 @@ _G.prepare_packer = function()
           end
         }
 
+        use{
+          "yioneko/nvim-yati",
+          requires = "nvim-treesitter/nvim-treesitter",
+          config = function()
+            require("nvim-treesitter.configs").setup {
+              yati = { enable = true },
+            }
+          end
+        }
+
+        --[==[
+        use {
+          'romgrk/nvim-treesitter-context',
+          config = function()
+            require'treesitter-context'.setup{}
+          end
+        }
+        ]==]
+
+        use {
+          'j-hui/fidget.nvim',
+          config = function()
+            require"fidget".setup{}
+          end
+        }
+
         use {
             'hrsh7th/nvim-cmp',
             requires = {
@@ -310,12 +363,14 @@ _G.prepare_packer = function()
                 'L3MON4D3/LuaSnip',
                 'saadparwaiz1/cmp_luasnip',
                 'hrsh7th/cmp-cmdline',
+                'hrsh7th/cmp-nvim-lsp-signature-help',
+                'hrsh7th/cmp-nvim-lsp-document-symbol',
             },
             config = function()
                 local cmp = require'cmp'
                 local lspkind = require'lspkind'
 
-                lspkind.init { }
+                --lspkind.init { }
 
                 cmp.setup {
                     snippet = {
@@ -343,32 +398,36 @@ _G.prepare_packer = function()
                     sources = cmp.config.sources({
                         { name = 'nvim_lsp' },
                         { name = 'path' },
-                        { name = "crates" },
+                        { name = 'crates' },
                         --{ name = 'skkeleton' },
+                        { name = 'nvim_lsp_signature_help' },
                     }, {
                         { name = 'buffer' },
-                    }),
-
-                    -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
-                    cmp.setup.cmdline('/', {
-                        sources = {
-                            { name = 'buffer' }
-                        }
-                    }),
-
-                    -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
-                    cmp.setup.cmdline(':', {
-                        sources = cmp.config.sources({
-                            { name = 'path' }
-                        }, {
-                            { name = 'cmdline' }
-                        })
                     }),
 
                     formatting = {
                         format = lspkind.cmp_format{ },
                     },
                 }
+
+                -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
+                cmp.setup.cmdline('/', {
+                    sources = cmp.config.sources({
+                        { name = 'nvim_lsp_document_symbol' },
+                    }, {
+                        { name = 'buffer' },
+                    })
+                })
+
+                -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+                cmp.setup.cmdline(':', {
+                    sources = cmp.config.sources({
+                        { name = 'path' }
+                    }, {
+                        { name = 'cmdline' }
+                    })
+                })
+
             end
         }
     end)
@@ -414,6 +473,7 @@ _G.setup_lsp = function()
         -- added
         require'lsp-status'.on_attach(client, bufnr)
         -- lsp_signature
+        --[==[
         require "lsp_signature".on_attach({
             bind = true,
             handler_opts = {
@@ -421,6 +481,7 @@ _G.setup_lsp = function()
             },
             hint_prefix = " ",
         }, bufnr)
+        ]==]
         -- vim-illuminate
         require'illuminate'.on_attach(client)
     end
