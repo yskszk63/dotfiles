@@ -81,6 +81,8 @@ vim.cmd [[autocmd FileType typescript setlocal ts=2 sts=2 sw=2]]
 vim.cmd [[autocmd FileType typescriptreact setlocal ts=2 sts=2 sw=2]]
 vim.cmd [[autocmd FileType json setlocal ts=2 sts=2 sw=2]]
 vim.cmd [[autocmd FileType html setlocal ts=2 sts=2 sw=2]]
+vim.cmd [[autocmd FileType javascript setlocal ts=2 sts=2 sw=2]]
+vim.cmd [[autocmd FileType lua setlocal ts=2 sts=2 sw=2]]
 
 -- Disalbe embedded plugins.
 
