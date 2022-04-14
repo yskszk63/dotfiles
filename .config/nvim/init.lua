@@ -248,6 +248,20 @@ _G.prepare_packer = function()
 				}
 
         use {
+          'sidebar-nvim/sidebar.nvim',
+          config = function()
+            require("sidebar-nvim").setup()
+          end
+        }
+
+        use {
+          'petertriho/nvim-scrollbar',
+          config = function()
+            require("scrollbar").setup()
+          end
+        }
+
+        use {
             'alvarosevilla95/luatab.nvim',
             requires = 'kyazdani42/nvim-web-devicons',
             config = function()
@@ -404,9 +418,11 @@ _G.prepare_packer = function()
                     }, {
                         { name = 'buffer' },
                     }),
-
                     formatting = {
                         format = lspkind.cmp_format{ },
+                    },
+                    view = {
+                      --entries = 'native',
                     },
                 }
 
