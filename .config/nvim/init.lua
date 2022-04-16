@@ -279,7 +279,15 @@ _G.prepare_packer = function()
             end
         }
 
-        use 'yuttie/comfortable-motion.vim'
+        --use 'yuttie/comfortable-motion.vim'
+
+        use {
+          'declancm/cinnamon.nvim',
+          config = function()
+            require('cinnamon').setup {
+            }
+          end
+        }
 
         use 'cespare/vim-toml'
         use 'rust-lang/rust.vim'
