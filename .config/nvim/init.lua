@@ -221,33 +221,34 @@ _G.prepare_packer = function()
             end
         }
 
-				use {
-						'hoob3rt/lualine.nvim',
-						requires = {
-								'kyazdani42/nvim-web-devicons',
-								'lambdalisue/battery.vim',
-								'nvim-lua/lsp-status.nvim',
-                'sainnhe/sonokai',
-                'vim-skk/skkeleton',
-                'SmiteshP/nvim-gps',
-                'nvim-treesitter/nvim-treesitter',
-						},
-						config = function()
-              local gps = require'nvim-gps'
-              gps.setup{}
+        use {
+          'hoob3rt/lualine.nvim',
+          requires = {
+            'kyazdani42/nvim-web-devicons',
+            'lambdalisue/battery.vim',
+            'nvim-lua/lsp-status.nvim',
+            'sainnhe/sonokai',
+            'vim-skk/skkeleton',
+            'SmiteshP/nvim-gps',
+            'nvim-treesitter/nvim-treesitter',
+          },
+          config = function()
+            local gps = require'nvim-gps'
+            gps.setup{}
 
-							require('lualine').setup{
-									options = {
-											--theme = 'nightfox',
-											theme = 'sonokai',
-									},
-                  sections = {
-                      lualine_c = {'filename', 'battery#component', 'skkeleton#mode', require'lsp-status'.status, gps.get_location},
-                      --lualine_d = { , cond = gps.is_available },
-                  },
-							}
-						end
-				}
+            require('lualine').setup{
+              options = {
+                --theme = 'nightfox',
+                theme = 'sonokai',
+                globalstatus = true,
+              },
+              sections = {
+                lualine_c = {'filename', 'battery#component', 'skkeleton#mode', require'lsp-status'.status, gps.get_location},
+                --lualine_d = { , cond = gps.is_available },
+              },
+            }
+          end
+        }
 
         use {
           'sidebar-nvim/sidebar.nvim',
@@ -325,7 +326,7 @@ _G.prepare_packer = function()
                 vim.api.nvim_command [[ hi def link LspReferenceWrite CursorLine ]]
                 vim.api.nvim_command [[ hi def link LspReferenceRead CursorLine ]]
 
-								vim.g.Illuminate_highlightUnderCursor = 0
+                vim.g.Illuminate_highlightUnderCursor = 0
                 vim.cmd [[
                   augroup illuminate_augroup
                       autocmd!
