@@ -344,12 +344,14 @@ _G.prepare_packer = function()
             end
         }
 
+        --[==[
         use {
           'mvllow/modes.nvim',
           config = function()
             require('modes').setup()
           end
         }
+        ]==]
 
         use{
           "yioneko/nvim-yati",
@@ -574,6 +576,12 @@ _G.setup_lsp = function()
     }
 
     nvim_lsp.intelephense.setup{
+        on_attach = on_attach,
+        capabilities = capabilities,
+        flags = {debounce_text_changes = 150},
+    }
+
+    nvim_lsp.prismals.setup{
         on_attach = on_attach,
         capabilities = capabilities,
         flags = {debounce_text_changes = 150},
