@@ -295,6 +295,8 @@ _G.prepare_packer = function()
         --use 'andrejlevkovitch/vim-lua-format'
         --use 'ollykel/v-vim'
 
+        use 'pantharshit00/vim-prisma'
+
         use {'nvim-treesitter/nvim-treesitter', run = ':TSUpdate'}
 
         use {
