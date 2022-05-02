@@ -535,6 +535,56 @@ _G.setup_lsp = function()
     }
 
     if not require'lspconfig.configs'.dlsortls then
+      local function virtual_text_document_handler(uri, result)
+        if not result then
+          return nil
+        end
+
+        for client_id, res in pairs(result) do
+          local lines = vim.split(res.result, '\n')
+          local bufnr = vim.uri_to_bufnr(uri)
+
+          local current_buf = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+          if #current_buf ~= 0 then
+            return nil
+          end
+
+          vim.api.nvim_buf_set_lines(bufnr, 0, -1, nil, lines)
+          vim.api.nvim_buf_set_option(bufnr, 'readonly', true)
+          vim.api.nvim_buf_set_option(bufnr, 'modified', false)
+          vim.api.nvim_buf_set_option(bufnr, 'modifiable', false)
+          vim.lsp.buf_attach_client(bufnr, client_id)
+        end
+      end
+
+      local function virtual_text_document(uri)
+        local params = {
+          textDocument = {
+            uri = uri,
+          }
+        }
+        local result = vim.lsp.buf_request_sync(0, 'deno/virtualTextDocument', params)
+        virtual_text_document_handler(uri, result)
+      end
+
+      -- https://github.com/neovim/nvim-lspconfig/blob/21102d5e3b6ffc6929d60418581ac1a29ee9eddd/lua/lspconfig/server_configurations/denols.lua#L47
+      local function denols_handler(err, result, ctx)
+        if not result or vim.tbl_isempty(result) then
+          return nil
+        end
+
+        for _, res in pairs(result) do
+          local uri = res.uri or res.targetUri
+          if uri:match '^deno:' then
+            virtual_text_document(uri)
+            res['uri'] = uri
+            res['targetUri'] = uri
+          end
+        end
+
+        vim.lsp.handlers[ctx.method](err, result, ctx)
+      end
+
       require'lspconfig.configs'.dlsortls = {
         default_config = {
           init_options = {
@@ -553,6 +603,10 @@ _G.setup_lsp = function()
             'typescript.tsx',
           },
           root_dir = require'lspconfig.util'.root_pattern('tsconfig.json', 'package.json', 'jsconfig.json', '.git', 'deno.json', 'deno.jsonc'),
+          handlers = {
+            ['textDocument/definition'] = denols_handler,
+            ['textDocument/references'] = denols_handler,
+          },
         }
       }
     end
