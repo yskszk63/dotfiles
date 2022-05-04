@@ -84,9 +84,9 @@ vim.api.nvim_set_keymap("n", "@T", [[:tabnew<CR>:terminal<CR>i]], { noremap = tr
 vim.api.nvim_create_autocmd("TermOpen", {
   pattern = "*",
   callback = function()
-    vim.wo.number = false
-    vim.wo.relativenumber = false
-    vim.wo.signcolumn = "no"
+    vim.opt_local.number = false
+    vim.opt_local.relativenumber = false
+    vim.opt_local.signcolumn = "no"
   end,
 })
 
