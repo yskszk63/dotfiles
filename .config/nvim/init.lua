@@ -156,21 +156,6 @@ _G.prepare_packer = function()
     use "mattn/emmet-vim"
 
     use {
-      "github/copilot.vim",
-      opt = true,
-      disable = vim.api.nvim_call_function("has", { "nvim-0.6" }) == 0,
-      setup = function()
-        vim.api.nvim_set_keymap(
-          "i",
-          "<C-L>",
-          "copilot#Accept()",
-          { script = true, silent = true, nowait = true, expr = true }
-        )
-        vim.g.copilot_no_tab_map = true
-      end,
-    }
-
-    use {
       "vim-skk/skkeleton",
       requires = {
         "vim-denops/denops.vim",
