@@ -348,6 +348,7 @@ _G.prepare_packer = function()
     use "rust-lang/rust.vim"
     --use 'andrejlevkovitch/vim-lua-format'
     --use 'ollykel/v-vim'
+    use "ziglang/zig.vim"
 
     use "pantharshit00/vim-prisma"
 
