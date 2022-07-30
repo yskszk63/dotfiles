@@ -274,7 +274,7 @@ _G.prepare_packer = function()
       "hoob3rt/lualine.nvim",
       requires = {
         "kyazdani42/nvim-web-devicons",
-        "lambdalisue/battery.vim",
+        --"lambdalisue/battery.vim",
         "nvim-lua/lsp-status.nvim",
         "sainnhe/sonokai",
         "vim-skk/skkeleton",
@@ -294,7 +294,7 @@ _G.prepare_packer = function()
           sections = {
             lualine_c = {
               "filename",
-              "battery#component",
+              --"battery#component",
               "skkeleton#mode",
               require("lsp-status").status,
               gps.get_location,
