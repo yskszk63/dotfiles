@@ -721,6 +721,24 @@ _G.setup_lsp = function()
     flags = { debounce_text_changes = 150 },
   }
 
+  nvim_lsp.efm.setup {
+    on_attach = on_attach,
+    capabilities = capabilities,
+    flags = { debounce_text_changes = 150 },
+    filetypes = {"yaml"}, -- TODO define cfn
+    settings = {
+      rootMarkers = {".git/"},
+      languages = {
+        yaml = {
+          {
+            lintCommand = "cfn-lint",
+            lintStdin = true,
+          }
+        },
+      },
+    },
+  }
+
   -- https://github.com/neovim/nvim-lspconfig/wiki/UI-customization#change-diagnostic-symbols-in-the-sign-column-gutter
   local signs = {
     Error = " ",
