@@ -412,6 +412,11 @@ _G.prepare_packer = function()
         }
         ]==]
 
+
+    use {
+      "hashivim/vim-terraform",
+    }
+
     use {
       "yioneko/nvim-yati",
       requires = "nvim-treesitter/nvim-treesitter",
@@ -745,7 +750,7 @@ _G.setup_lsp = function()
     },
   }
 
-  nvim_lsp.terraform_lsp.setup {
+  nvim_lsp.terraformls.setup {
     on_attach = on_attach,
     capabilities = capabilities,
     flags = { debounce_text_changes = 150 },
