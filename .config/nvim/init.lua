@@ -745,6 +745,12 @@ _G.setup_lsp = function()
     },
   }
 
+  nvim_lsp.terraform_lsp.setup {
+    on_attach = on_attach,
+    capabilities = capabilities,
+    flags = { debounce_text_changes = 150 },
+  }
+
   -- https://github.com/neovim/nvim-lspconfig/wiki/UI-customization#change-diagnostic-symbols-in-the-sign-column-gutter
   local signs = {
     Error = " ",
