@@ -583,7 +583,8 @@ _G.setup_lsp = function()
     require("illuminate").on_attach(client)
   end
 
-  capabilities = require("cmp_nvim_lsp").update_capabilities(require("lsp-status").capabilities)
+  --capabilities = require("cmp_nvim_lsp").update_capabilities(require("lsp-status").capabilities)
+  capabilities = require("cmp_nvim_lsp").default_capabilities()
 
   nvim_lsp.gopls.setup {
     on_attach = on_attach,
