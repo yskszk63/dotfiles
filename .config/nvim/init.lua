@@ -153,6 +153,13 @@ _G.prepare_packer = function()
   require("packer").startup(function()
     use { "wbthomason/packer.nvim", opt = true }
 
+    use {
+      "rbtnn/vim-ambiwidth",
+      config = function()
+        vim.g.ambiwidth_cica_enabled = false
+      end,
+    }
+
     use "mattn/emmet-vim"
 
     use {
