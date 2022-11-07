@@ -155,8 +155,12 @@ _G.prepare_packer = function()
 
     use {
       "rbtnn/vim-ambiwidth",
-      config = function()
+      disable = true,
+      setup = function()
         vim.g.ambiwidth_cica_enabled = false
+        vim.g.ambiwidth_add_list = {
+          --{ 0x2798, 0x279f, 1 }, -- ➘➙➚➛➜➝➞➟
+        }
       end,
     }
 
