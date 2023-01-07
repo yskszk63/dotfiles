@@ -768,6 +768,19 @@ _G.setup_lsp = function()
     flags = { debounce_text_changes = 150 },
   }
 
+  nvim_lsp.yamlls.setup {
+    on_attach = on_attach,
+    capabilities = capabilities,
+    flags = { debounce_text_changes = 150 },
+    settings = {
+      yaml = {
+        schemas = {
+          ["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*"
+        },
+      },
+    },
+  }
+
   -- https://github.com/neovim/nvim-lspconfig/wiki/UI-customization#change-diagnostic-symbols-in-the-sign-column-gutter
   local signs = {
     Error = " ",
