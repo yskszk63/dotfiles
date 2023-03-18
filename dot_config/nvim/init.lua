@@ -52,6 +52,17 @@ vim.api.nvim_create_autocmd("TermOpen", {
   group = "mytermcolor",
 })
 
+-- https://www.reddit.com/r/neovim/comments/tgyddx/heres_a_snippet_for_thicker_vertical_and/
+vim.opt.fillchars = {
+  horiz = '━',
+  horizup = '┻',
+  horizdown = '┳',
+  vert = '┃',
+  vertleft  = '┫',
+  vertright = '┣',
+  verthoriz = '╋',
+}
+
 _G.spliterm = function()
   local w = vim.fn.winwidth(0)
   if w > (80 * 2) then
