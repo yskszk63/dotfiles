@@ -9,15 +9,15 @@
 ## Requirements
 
 - Git
-- Neovim (+0.5)
+- Neovim (^0.8)
 - zsh
+- chezmoi
 
 Nerd Fonts (or Anything)
 
 ## Usage
 
 ```
-git clone https://github.com/yskszk63/dotfiles ~/.dotfiles
-cd ~/.dotfiles
-./setup
+chezmoi init https://github.com/yskszk63/dotfiles
+chezmoi apply
 ```
