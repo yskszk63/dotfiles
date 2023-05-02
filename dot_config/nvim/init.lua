@@ -203,7 +203,6 @@ require("lazy").setup {
       { "<Leader>b", "<cmd>lua require('telescope.builtin').buffers()<CR>" },
       { "<Leader>rg", "<cmd>lua require('telescope.builtin').live_grep({ prompt_prefix='🔍' })<CR>" },
       { "<Leader>dl", "<cmd>lua require('telescope.builtin').diagnostics{}<CR>" },
-      { "<Leader>ca", "<cmd>lua require('telescope.builtin').lsp_code_actions{}<CR>" },
       { "<Leader>rf", "<cmd>lua require('telescope.builtin').lsp_references{}<CR>" },
       { "<Leader>ds", "<cmd>lua require('telescope.builtin').lsp_document_symbols{}<CR>" },
     },
