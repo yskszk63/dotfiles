@@ -37,7 +37,7 @@ bindkey -d
 bindkey -e
 
 HISTFILE=~/.zsh_history
-#HISTSIZE=1000
+HISTSIZE=1000
 SAVEHIST=10000
 
 setopt hist_ignore_dups

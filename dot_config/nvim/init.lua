@@ -413,6 +413,10 @@ require("lazy").setup {
     "j-hui/fidget.nvim",
     config = true,
   },
+
+  {
+    "udalov/kotlin-vim",
+  },
 }
 
 function lspconfig()
@@ -426,7 +430,18 @@ function lspconfig()
   require("rust-tools").setup {
     server = {
       capabilities = capabilities,
-      settings = { ["rust-analyzer"] = { diagnostics = { enable = false } } },
+      settings = {
+        ["rust-analyzer"] = {
+          diagnostics = {
+            enable = true,
+          },
+          imports = {
+            granularity = {
+              group = "module",
+            },
+          },
+        }
+      },
     },
   }
 
@@ -493,4 +508,8 @@ function lspconfig()
     root_dir = nvim_lsp.util.root_pattern("package.json"),
     single_file_support = false,
   } 
+
+  nvim_lsp.kotlin_language_server.setup {
+    capabilities = capabilities,
+  }
 end
