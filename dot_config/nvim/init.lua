@@ -492,6 +492,24 @@ function lspconfig()
     },
   }
 
+  nvim_lsp.jsonls.setup {
+    capabilities = capabilities,
+    settings = {
+      json = {
+        schemas = {
+            {
+              fileMatch = { "package.json" },
+              url = "https://json.schemastore.org/package.json",
+            },
+            {
+              fileMatch = { "tsconfig*.json" },
+              url = "https://json.schemastore.org/tsconfig.json",
+            },
+        }
+      }
+    },
+  }
+
   nvim_lsp.eslint.setup {
     capabilities = capabilities,
   }
