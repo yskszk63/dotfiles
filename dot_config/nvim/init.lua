@@ -264,7 +264,7 @@ require("lazy").setup {
     },
     config = function()
       require"lspsaga".setup {}
-      vim.wo.stl = require('lspsaga.symbolwinbar'):get_winbar()
+      --vim.wo.stl = require('lspsaga.symbolwinbar'):get_winbar()
     end,
     keys = {
       { "gh", "<cmd>Lspsaga lsp_finder<CR>" },
