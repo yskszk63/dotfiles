@@ -143,6 +143,7 @@ require("lazy").setup {
       vim.g.sonokai_diagnostic_text_highlight = 1
       vim.g.sonokai_diagnostic_line_highlight = 1
       vim.g.sonokai_diagnostic_virtual_text = "colored"
+      vim.g.sonokai_menu_selection_background = "green"
 
       vim.cmd [[colorscheme sonokai]]
     end,
@@ -198,6 +199,15 @@ require("lazy").setup {
   {
     "nvim-telescope/telescope.nvim",
     cmd = "Telescope",
+    config = function()
+      require'telescope'.setup {
+        pickers = {
+          find_files = {
+            hidden = true,
+          },
+        },
+      }
+    end,
     keys = {
       { "<C-p>", "<cmd>lua require('telescope.builtin').find_files()<CR>" },
       { "<Leader>b", "<cmd>lua require('telescope.builtin').buffers()<CR>" },
@@ -236,7 +246,7 @@ require("lazy").setup {
           additional_vim_regex_highlighting = false,
         },
         indent = {
-          enable = false
+          enable = true,
         },
       }
     end,
@@ -263,7 +273,11 @@ require("lazy").setup {
       "nvim-treesitter/nvim-treesitter",
     },
     config = function()
-      require"lspsaga".setup {}
+      require"lspsaga".setup {
+        lightbulb = {
+          enable = false,
+        },
+      }
       --vim.wo.stl = require('lspsaga.symbolwinbar'):get_winbar()
     end,
     keys = {
@@ -339,13 +353,11 @@ require("lazy").setup {
       }
 
       -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
-      cmp.setup.cmdline("/", {
+      cmp.setup.cmdline({"/", "?"}, {
         mapping = cmp.mapping.preset.cmdline(),
-        sources = cmp.config.sources({
-          { name = "nvim_lsp_document_symbol" },
-        }, {
+        sources = {
           { name = "buffer" },
-        }),
+        },
       })
 
       -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
@@ -411,7 +423,11 @@ require("lazy").setup {
 
   {
     "j-hui/fidget.nvim",
-    config = true,
+    tag = "legacy",
+    event = "LspAttach",
+    opts = {
+      -- options
+    },
   },
 
   {
