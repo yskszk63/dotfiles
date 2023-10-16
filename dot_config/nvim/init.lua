@@ -91,6 +91,8 @@ vim.api.nvim_set_keymap("t", "<ESC>", [[<C-\><C-n>]], { noremap = true, silent =
 vim.api.nvim_set_keymap("n", "@t", [[:lua _G.spliterm()<CR>]], { noremap = true })
 vim.api.nvim_set_keymap("n", "@T", [[:tabnew<CR>:terminal<CR>i]], { noremap = true })
 
+vim.api.nvim_set_keymap("t", [[<S-Space>]], [[<Space>]], { noremap = true })
+
 -- no term number
 vim.api.nvim_create_autocmd("TermOpen", {
   pattern = "*",
@@ -260,7 +262,7 @@ require("lazy").setup {
       vim.api.nvim_command("LspStart")
     end,
     dependencies = {
-      "simrat39/rust-tools.nvim",
+      -- "simrat39/rust-tools.nvim",
       "hrsh7th/cmp-nvim-lsp",
     },
   },
@@ -443,6 +445,7 @@ function lspconfig()
     capabilities = capabilities,
   }
 
+  --[==[
   require("rust-tools").setup {
     server = {
       capabilities = capabilities,
@@ -459,6 +462,10 @@ function lspconfig()
         }
       },
     },
+  }
+  ]==]
+  nvim_lsp.rust_analyzer.setup {
+    capabilities = capabilities,
   }
 
   nvim_lsp.pyright.setup {
