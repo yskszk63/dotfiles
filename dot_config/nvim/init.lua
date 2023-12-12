@@ -262,8 +262,9 @@ require("lazy").setup {
       vim.api.nvim_command("LspStart")
     end,
     dependencies = {
-      -- "simrat39/rust-tools.nvim",
+      "simrat39/rust-tools.nvim",
       "hrsh7th/cmp-nvim-lsp",
+      "folke/neoconf.nvim",
     },
   },
 
@@ -438,6 +439,7 @@ require("lazy").setup {
 }
 
 function lspconfig()
+  require("neoconf").setup({})
   local capabilities = require('cmp_nvim_lsp').default_capabilities()
   local nvim_lsp = require "lspconfig"
 
@@ -445,7 +447,6 @@ function lspconfig()
     capabilities = capabilities,
   }
 
-  --[==[
   require("rust-tools").setup {
     server = {
       capabilities = capabilities,
@@ -463,10 +464,11 @@ function lspconfig()
       },
     },
   }
-  ]==]
+  --[==[
   nvim_lsp.rust_analyzer.setup {
     capabilities = capabilities,
   }
+  ]==]
 
   nvim_lsp.pyright.setup {
     capabilities = capabilities,
