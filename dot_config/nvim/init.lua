@@ -434,6 +434,14 @@ require("lazy").setup {
   },
 
   {
+    "shellRaining/hlchunk.nvim",
+    event = { "UIEnter" },
+    config = function()
+      require("hlchunk").setup({})
+    end
+  },
+
+  {
     "udalov/kotlin-vim",
   },
 }
