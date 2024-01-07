@@ -71,3 +71,9 @@ autoload -Uz compinit && compinit
 which aws_completer > /dev/null && complete -C aws_completer aws
 
 [[ ! -f ~/.zshrc.custom ]] || source ~/.zshrc.custom
+
+which virsh > /dev/null 2>&1 && export LIBVIRT_DEFAULT_URI="qemu:///system"
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
