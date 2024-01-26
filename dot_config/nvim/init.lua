@@ -170,12 +170,13 @@ require("lazy").setup {
       local skkeleton_init = function()
         vim.fn["skkeleton#config"] {
           acceptIllegalResult = true,
-          tabCompletion = true,
           usePopup = true,
           eggLikeNewline = true,
-          --showCandidatesCount = 65535,
           markerHenkan = "﬍ ",
           markerHenkanSelect = "ﳳ ",
+          globalDictionaries = {
+            "/usr/share/skk/SKK-JISYO.L",
+          },
         }
       end
 
