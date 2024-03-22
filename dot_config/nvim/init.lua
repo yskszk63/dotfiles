@@ -119,6 +119,15 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- https://unix.stackexchange.com/questions/609612/disable-auto-tabs-when-putting-your-first-comment-in-a-yaml-files-with-vim-edito
+--autocmd BufEnter *.yaml,*.yml :set indentkeys-=0#
+vim.api.nvim_create_autocmd("BufEnter", {
+  pattern = { "*.yaml", "*.yml" },
+  callback = function()
+    vim.bo.indentkeys = vim.bo.indentkeys:gsub('0#', '')
+  end,
+})
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
