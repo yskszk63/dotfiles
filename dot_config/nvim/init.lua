@@ -581,4 +581,8 @@ function lspconfig()
     apex_enable_completion_statistics = false, -- Whether to allow Apex Language Server to collect telemetry on code completion usage
     filetypes = { "apexcode", "apex" },
   }
+
+  nvim_lsp.cssls.setup {
+    capabilities = capabilities,
+  }
 end
