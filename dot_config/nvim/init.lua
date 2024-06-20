@@ -141,6 +141,137 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+function lspconfig()
+  require("neoconf").setup({})
+  local capabilities = require('cmp_nvim_lsp').default_capabilities()
+  local nvim_lsp = require "lspconfig"
+
+  nvim_lsp.gopls.setup {
+    capabilities = capabilities,
+  }
+
+  require("rust-tools").setup {
+    server = {
+      capabilities = capabilities,
+      settings = {
+        ["rust-analyzer"] = {
+          diagnostics = {
+            enable = true,
+          },
+          imports = {
+            granularity = {
+              group = "module",
+            },
+          },
+        }
+      },
+    },
+  }
+  --[==[
+  nvim_lsp.rust_analyzer.setup {
+    capabilities = capabilities,
+  }
+  ]==]
+
+  nvim_lsp.pyright.setup {
+    capabilities = capabilities,
+  }
+
+  nvim_lsp.zls.setup {
+    capabilities = capabilities,
+  }
+
+  nvim_lsp.jdtls.setup {
+    capabilities = capabilities,
+  }
+
+  nvim_lsp.solargraph.setup {
+    capabilities = capabilities,
+  }
+
+  nvim_lsp.efm.setup {
+    capabilities = capabilities,
+    filetypes = {"yaml"}, -- TODO define cfn
+    settings = {
+      rootMarkers = {".git/"},
+      languages = {
+        yaml = {
+          {
+            lintCommand = "cfn-lint",
+            lintStdin = true,
+          }
+        },
+      },
+    },
+  }
+
+  nvim_lsp.terraformls.setup {
+    capabilities = capabilities,
+  }
+
+  nvim_lsp.yamlls.setup {
+    capabilities = capabilities,
+    settings = {
+      yaml = {
+        schemas = {
+          ["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*"
+        },
+      },
+    },
+  }
+
+  nvim_lsp.jsonls.setup {
+    capabilities = capabilities,
+    settings = {
+      json = {
+        schemas = {
+            {
+              fileMatch = { "package.json" },
+              url = "https://json.schemastore.org/package.json",
+            },
+            {
+              fileMatch = { "tsconfig*.json" },
+              url = "https://json.schemastore.org/tsconfig.json",
+            },
+        }
+      }
+    },
+  }
+
+  nvim_lsp.eslint.setup {
+    capabilities = capabilities,
+  }
+
+  -- https://deno.land/manual@v1.16.3/getting_started/setup_your_environment#neovim-06-and-nvim-lspconfig
+  --
+  nvim_lsp.denols.setup {
+    capabilities = capabilities,
+    root_dir = nvim_lsp.util.root_pattern("deno.json"),
+  }
+
+  nvim_lsp.tsserver.setup {
+    capabilities = capabilities,
+    root_dir = nvim_lsp.util.root_pattern("package.json"),
+    single_file_support = false,
+  } 
+
+  nvim_lsp.kotlin_language_server.setup {
+    capabilities = capabilities,
+  }
+
+  nvim_lsp.apex_ls.setup {
+    capabilities = capabilities,
+    apex_jar_path = vim.fn.expand("$HOME/.local/bin/apex-jorje-lsp.jar"),
+    apex_enable_semantic_errors = false, -- Whether to allow Apex Language Server to surface semantic errors
+    apex_enable_completion_statistics = false, -- Whether to allow Apex Language Server to collect telemetry on code completion usage
+    filetypes = { "apexcode", "apex" },
+  }
+
+  nvim_lsp.cssls.setup {
+    capabilities = capabilities,
+  }
+end
+
 require("lazy").setup {
   {
     "sainnhe/sonokai",
@@ -181,8 +312,8 @@ require("lazy").setup {
           acceptIllegalResult = true,
           usePopup = true,
           eggLikeNewline = true,
-          markerHenkan = "﬍ ",
-          markerHenkanSelect = "ﳳ ",
+          --markerHenkan = "﬍ ",
+          --markerHenkanSelect = "ﳳ ",
           globalDictionaries = {
             "/usr/share/skk/SKK-JISYO.L",
           },
@@ -456,133 +587,3 @@ require("lazy").setup {
   },
 }
 
-function lspconfig()
-  require("neoconf").setup({})
-  local capabilities = require('cmp_nvim_lsp').default_capabilities()
-  local nvim_lsp = require "lspconfig"
-
-  nvim_lsp.gopls.setup {
-    capabilities = capabilities,
-  }
-
-  require("rust-tools").setup {
-    server = {
-      capabilities = capabilities,
-      settings = {
-        ["rust-analyzer"] = {
-          diagnostics = {
-            enable = true,
-          },
-          imports = {
-            granularity = {
-              group = "module",
-            },
-          },
-        }
-      },
-    },
-  }
-  --[==[
-  nvim_lsp.rust_analyzer.setup {
-    capabilities = capabilities,
-  }
-  ]==]
-
-  nvim_lsp.pyright.setup {
-    capabilities = capabilities,
-  }
-
-  nvim_lsp.zls.setup {
-    capabilities = capabilities,
-  }
-
-  nvim_lsp.jdtls.setup {
-    capabilities = capabilities,
-  }
-
-  nvim_lsp.solargraph.setup {
-    capabilities = capabilities,
-  }
-
-  nvim_lsp.efm.setup {
-    capabilities = capabilities,
-    filetypes = {"yaml"}, -- TODO define cfn
-    settings = {
-      rootMarkers = {".git/"},
-      languages = {
-        yaml = {
-          {
-            lintCommand = "cfn-lint",
-            lintStdin = true,
-          }
-        },
-      },
-    },
-  }
-
-  nvim_lsp.terraformls.setup {
-    capabilities = capabilities,
-  }
-
-  nvim_lsp.yamlls.setup {
-    capabilities = capabilities,
-    settings = {
-      yaml = {
-        schemas = {
-          ["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*"
-        },
-      },
-    },
-  }
-
-  nvim_lsp.jsonls.setup {
-    capabilities = capabilities,
-    settings = {
-      json = {
-        schemas = {
-            {
-              fileMatch = { "package.json" },
-              url = "https://json.schemastore.org/package.json",
-            },
-            {
-              fileMatch = { "tsconfig*.json" },
-              url = "https://json.schemastore.org/tsconfig.json",
-            },
-        }
-      }
-    },
-  }
-
-  nvim_lsp.eslint.setup {
-    capabilities = capabilities,
-  }
-
-  -- https://deno.land/manual@v1.16.3/getting_started/setup_your_environment#neovim-06-and-nvim-lspconfig
-  --
-  nvim_lsp.denols.setup {
-    capabilities = capabilities,
-    root_dir = nvim_lsp.util.root_pattern("deno.json"),
-  }
-
-  nvim_lsp.tsserver.setup {
-    capabilities = capabilities,
-    root_dir = nvim_lsp.util.root_pattern("package.json"),
-    single_file_support = false,
-  } 
-
-  nvim_lsp.kotlin_language_server.setup {
-    capabilities = capabilities,
-  }
-
-  nvim_lsp.apex_ls.setup {
-    capabilities = capabilities,
-    apex_jar_path = vim.fn.expand("$HOME/.local/bin/apex-jorje-lsp.jar"),
-    apex_enable_semantic_errors = false, -- Whether to allow Apex Language Server to surface semantic errors
-    apex_enable_completion_statistics = false, -- Whether to allow Apex Language Server to collect telemetry on code completion usage
-    filetypes = { "apexcode", "apex" },
-  }
-
-  nvim_lsp.cssls.setup {
-    capabilities = capabilities,
-  }
-end
