@@ -376,7 +376,8 @@ require("lazy").setup {
           },
         },
       }
-    end
+    end,
+    dependencies = { 'nvim-tree/nvim-web-devicons' }
   },
 
   {
@@ -541,6 +542,7 @@ require("lazy").setup {
 
   {
     "declancm/cinnamon.nvim",
+    enabled = false,
     config = true,
   },
 
