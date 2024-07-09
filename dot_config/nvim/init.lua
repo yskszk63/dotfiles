@@ -244,10 +244,12 @@ function lspconfig()
 
   -- https://deno.land/manual@v1.16.3/getting_started/setup_your_environment#neovim-06-and-nvim-lspconfig
   --
+  --[==[
   nvim_lsp.denols.setup {
     capabilities = capabilities,
     root_dir = nvim_lsp.util.root_pattern("deno.json"),
   }
+  ]==]
 
   nvim_lsp.tsserver.setup {
     capabilities = capabilities,
