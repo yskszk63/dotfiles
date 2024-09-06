@@ -251,7 +251,7 @@ function lspconfig()
   }
   ]==]
 
-  nvim_lsp.tsserver.setup {
+  nvim_lsp.ts_ls.setup {
     capabilities = capabilities,
     root_dir = nvim_lsp.util.root_pattern("package.json"),
     single_file_support = false,
