@@ -312,7 +312,7 @@ require("lazy").setup {
       local skkeleton_init = function()
         vim.fn["skkeleton#config"] {
           acceptIllegalResult = true,
-          usePopup = true,
+          --usePopup = true,
           eggLikeNewline = true,
           --markerHenkan = "﬍ ",
           --markerHenkanSelect = "ﳳ ",
