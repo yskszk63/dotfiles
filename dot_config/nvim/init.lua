@@ -142,7 +142,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 function lspconfig()
-  require("neoconf").setup({})
+  --require("neoconf").setup({})
   local capabilities = require('cmp_nvim_lsp').default_capabilities()
   local nvim_lsp = require "lspconfig"
 
@@ -392,7 +392,7 @@ require("lazy").setup {
           additional_vim_regex_highlighting = false,
         },
         indent = {
-          enable = true,
+          enable = false,
         },
       }
     end,
@@ -408,7 +408,7 @@ require("lazy").setup {
     dependencies = {
       "simrat39/rust-tools.nvim",
       "hrsh7th/cmp-nvim-lsp",
-      "folke/neoconf.nvim",
+      --"folke/neoconf.nvim",
     },
   },
 
