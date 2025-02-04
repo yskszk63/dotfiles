@@ -63,7 +63,8 @@ which renvim > /dev/null 2>&1 && {
     alias vi=$EDITOR
 }
 
-[[ ! -f /opt/asdf-vm/asdf.sh ]] || source /opt/asdf-vm/asdf.sh
+# asdf
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 
 autoload bashcompinit && bashcompinit
 autoload -Uz compinit && compinit
