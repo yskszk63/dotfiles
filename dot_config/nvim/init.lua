@@ -272,6 +272,10 @@ function lspconfig()
   nvim_lsp.cssls.setup {
     capabilities = capabilities,
   }
+
+  nvim_lsp.biome.setup {
+    capabilities = capabilities,
+  }
 end
 
 require("lazy").setup {
