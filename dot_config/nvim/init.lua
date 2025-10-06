@@ -13,7 +13,10 @@ vim.opt.termguicolors = true
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 vim.opt.pumblend = 20
 vim.opt.winblend = 20
-vim.opt.clipboard = vim.opt.clipboard + { "unnamedplus" }
+vim.opt.clipboard = { "unnamed", "unnamedplus" }
+if vim.env.TERM == "foot" then
+  vim.g.clipboard = "osc52"
+end
 if vim.fn.executable "zsh" == 1 then
   vim.opt.sh = "zsh"
 end

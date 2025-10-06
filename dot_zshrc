@@ -69,6 +69,8 @@ export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 autoload bashcompinit && bashcompinit
 autoload -Uz compinit && compinit
 
+[[ "$TERM" != "foot" ]] || ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
+
 which aws_completer > /dev/null && complete -C aws_completer aws
 
 [[ ! -f ~/.zshrc.custom ]] || source ~/.zshrc.custom
