@@ -74,6 +74,7 @@ return {
         "apex_ls",
         "cssls",
         "biome",
+        "lemminx",
       })
     end,
     dependencies = {
