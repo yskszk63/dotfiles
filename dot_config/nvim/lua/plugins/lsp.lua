@@ -72,6 +72,7 @@ return {
       })
 
       vim.lsp.config("deno", {
+        cmd = { "deno", "lsp" },
         root_markers = {
           "deno.json",
         },
