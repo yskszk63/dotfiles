@@ -14,17 +14,16 @@ vim.opt.completeopt = { "menu", "menuone", "noselect" }
 vim.opt.pumblend = 20
 vim.opt.winblend = 20
 vim.opt.clipboard = { "unnamed", "unnamedplus" }
-if vim.env.TERM == "foot" then
-  vim.g.clipboard = "osc52"
-end
 if vim.fn.executable "zsh" == 1 then
   vim.opt.sh = "zsh"
 end
-vim.opt.winborder = 'rounded'
+vim.opt.winborder = "rounded"
 
 vim.g.vimsyn_embed = "l"
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
+
+vim.opt.guicursor = "n-v-c-t-sm:block,i-ci-ve:ver25,r-cr-o:hor20"
 
 require("config.ft")
 require("config.keymap")
