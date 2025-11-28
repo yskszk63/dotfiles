@@ -43,12 +43,36 @@ return {
     config = true,
   },
 
+  --[==[
   {
     "kyazdani42/nvim-tree.lua",
     keys = {
       { "<C-n>", ":NvimTreeToggle<CR>" },
     },
     config = true,
+  },
+  ]==]
+
+  {
+    "stevearc/oil.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = true,
+    opts = {
+      win_options = {
+        number = false,
+        relativenumber = false,
+        signcolumn = "yes:2",
+      },
+    },
+  },
+  {
+    "benomahony/oil-git.nvim",
+    dependencies = { "stevearc/oil.nvim" },
+  },
+  {
+    "JezerM/oil-lsp-diagnostics.nvim",
+    dependencies = { "stevearc/oil.nvim" },
+    opts = {}
   },
 
   {
