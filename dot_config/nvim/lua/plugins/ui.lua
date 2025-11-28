@@ -64,6 +64,9 @@ return {
         signcolumn = "yes:2",
       },
     },
+    keys = {
+      { "-", "<CMD>Oil<CR>", mode = { "n" } },
+    },
   },
   {
     "benomahony/oil-git.nvim",
