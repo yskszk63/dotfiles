@@ -11,7 +11,8 @@ return {
       require'telescope'.setup {
         pickers = {
           find_files = {
-            hidden = true,
+            -- hidden = true,
+            find_command = { "fd", "--type", "f", "--hidden", "--exclude", ".git" },
           },
         },
       }
@@ -20,7 +21,6 @@ return {
       vim.api.nvim_create_autocmd("User", {
         pattern = "TelescopeFindPre",
         callback = function()
-          vim.opt_local.winborder = "none"
           vim.api.nvim_create_autocmd("WinLeave", {
             once = true,
             callback = function()
@@ -34,7 +34,7 @@ return {
     keys = {
       { "<C-p>", "<cmd>lua require('telescope.builtin').find_files()<CR>" },
       { "<Leader>b", "<cmd>lua require('telescope.builtin').buffers()<CR>" },
-      { "<Leader>rg", "<cmd>lua require('telescope.builtin').live_grep({ prompt_prefix='🔍' })<CR>" },
+      { "<Leader>rg", "<cmd>lua require('telescope.builtin').live_grep({ prompt_prefix='🔍 ' })<CR>" },
       { "<Leader>dl", "<cmd>lua require('telescope.builtin').diagnostics{}<CR>" },
       { "<Leader>rf", "<cmd>lua require('telescope.builtin').lsp_references{}<CR>" },
       { "<Leader>ds", "<cmd>lua require('telescope.builtin').lsp_document_symbols{}<CR>" },
