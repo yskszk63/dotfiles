@@ -66,6 +66,7 @@ return {
     },
     keys = {
       { "-", "<CMD>Oil<CR>", mode = { "n" } },
+      { "<c-n>", "<CMD>Oil --float<CR>", mode = { "n" } },
     },
   },
   {
