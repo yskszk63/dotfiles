@@ -31,70 +31,17 @@ return {
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufWrite" },
-    --event = "BufEnter",
     config = function()
       vim.diagnostic.config({
         virtual_text = true,
-      })
-
-      vim.lsp.config("yamlls", {
-        settings = {
-          yaml = {
-            schemas = {
-              ["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*"
-            },
-          },
-        },
-      })
-
-      vim.lsp.config("jsonls", {
-        settings = {
-          json = {
-            schemas = {
-                {
-                  fileMatch = { "package.json" },
-                  url = "https://json.schemastore.org/package.json",
-                },
-                {
-                  fileMatch = { "tsconfig*.json" },
-                  url = "https://json.schemastore.org/tsconfig.json",
-                },
-            }
-          }
-        },
-      })
-
-      vim.lsp.config("ts_ls", {
-        root_markers = {
-          "package.json",
-        },
-        workspace_required = true,
-      })
-
-      vim.lsp.config("deno", {
-        cmd = { "deno", "lsp" },
-        root_markers = {
-          "deno.json",
-        },
-        workspace_required = true,
-      })
-
-      vim.lsp.config("apex_ls", {
-        apex_jar_path = vim.fn.expand("$HOME/.local/bin/apex-jorje-lsp.jar"),
-        apex_enable_semantic_errors = false, -- Whether to allow Apex Language Server to surface semantic errors
-        apex_enable_completion_statistics = false, -- Whether to allow Apex Language Server to collect telemetry on code completion usage
-        filetypes = { "apexcode", "apex" },
-      })
-
-      vim.lsp.config("jdtls", {
       })
 
       vim.lsp.config('*', {
         before_init = function(_, config)
           apply_dropin_settings(config)
 
-          local codesettings = require('codesettings')
-          config = codesettings.with_local_settings(config.name, config)
+          --local codesettings = require('codesettings')
+          --config = codesettings.with_local_settings(config.name, config)
         end,
       })
 
@@ -111,19 +58,21 @@ return {
         "jsonls",
         "eslint",
         "ts_ls",
-        "deno",
+        "denols",
         --"kotlin_language_server",
-        "apex_ls",
+        --"apex_ls",
         "cssls",
         "biome",
         "lemminx",
+        "lua_ls",
       })
     end,
     dependencies = {
       --"simrat39/rust-tools.nvim",
       --"hrsh7th/cmp-nvim-lsp",
       --{ "folke/neoconf.nvim", cmd = "Neoconf", config = true },
-      { "mrjones2014/codesettings.nvim", opts = { jsonls_integration = true }, cmd = "Codesettings" },
+      --{ "mrjones2014/codesettings.nvim", opts = { jsonls_integration = true }, cmd = "Codesettings" },
+      "mfussenegger/nvim-dap",
       "mfussenegger/nvim-jdtls",
       --"nvim-java/nvim-java",
     },
