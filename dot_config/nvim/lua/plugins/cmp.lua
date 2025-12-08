@@ -14,6 +14,7 @@ return {
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
       "hrsh7th/cmp-cmdline",
+      "L3MON4D3/LuaSnip",
     },
     config = function()
       local cmp = require("cmp")
@@ -21,7 +22,7 @@ return {
       cmp.setup({
         snippet = {
           expand = function(args)
-            vim.snippet.expand(args.body)
+            require('luasnip').lsp_expand(args.body)
           end,
         },
         window = {
