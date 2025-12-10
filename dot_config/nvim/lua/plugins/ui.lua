@@ -63,6 +63,9 @@ return {
         relativenumber = false,
         signcolumn = "yes:2",
       },
+      keymaps = {
+        ["<C-p>"] = false,
+      },
     },
     keys = {
       { "-", "<CMD>Oil<CR>", mode = { "n" } },

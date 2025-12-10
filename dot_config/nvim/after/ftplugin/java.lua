@@ -39,7 +39,14 @@ local load_settings_json = function(root_dir)
     return {}
   end
 
-  return settings["java.test.config"]
+  -- if it is array
+  -- FIXME current first item only
+  local maybeHead = config[1]
+  if maybeHead ~= nil and type(maybeHead) == "table" then
+    return maybeHead
+  end
+
+  return config
 end
 
 ---@param config table
