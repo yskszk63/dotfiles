@@ -1,5 +1,7 @@
 local M = {}
 
+local jdtls = require("jdtls")
+
 local dir = vim.fn.fnamemodify(
   debug.getinfo(1, "S").source:sub(2),
   ":p:h"
@@ -97,6 +99,36 @@ function M.check_lombok(file)
   return result.code == 0
 end
 
+local function load_java_test_config()
+  local client = vim.lsp.get_clients({ name = "jdtls", bufnr = 0 })[1]
+  if not client or client.config.root_dir == nil then
+    return {}
+  end
+  local root_dir = client.config.root_dir
+  if root_dir == nil then
+    return {}
+  end
+
+  local bin = dir .. "/load-test-settings.ts"
+  local settingsjson = root_dir .. "/.vscode/settings.json"
+  local cmd = {
+    bin,
+    settingsjson,
+    root_dir,
+  }
+  local result = vim.system(cmd):wait()
+  if result.code ~= 0 or result.stdout == nil then
+    return {}
+  end
+  local ok, settings = pcall(vim.fn.json_decode, result.stdout)
+  if not ok or type(settings) ~= "table" then
+    vim.notify("failed to parse json: " .. settingsjson)
+    return {}
+  end
+
+  return settings
+end
+
 -- GET lombok.jar
 ---@return string?
 function M.get_lombok()
@@ -129,6 +161,16 @@ function M.get_jdtls_bindings()
   download_java_debug()
   download_java_test()
   return vim.split(vim.fn.glob(bindings_dir .. "/*/extension/server/*.jar", true), "\n")
+end
+
+function M.test_class_with_dotenv()
+  local cfg = load_java_test_config()
+  jdtls.test_class({ config_overrides = cfg })
+end
+
+function M.test_nearest_method_with_dotenv()
+  local cfg = load_java_test_config()
+  jdtls.test_nearest_method({ config_overrides = cfg })
 end
 
 return M
