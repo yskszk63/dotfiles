@@ -173,4 +173,15 @@ function M.test_nearest_method_with_dotenv()
   jdtls.test_nearest_method({ config_overrides = cfg })
 end
 
+---@param root_dir string
+---@return table
+function M.load_runtimes(root_dir)
+  local bin = dir .. "/list-java-by-asdf.ts"
+  local result = vim.system({bin}, { cwd = root_dir }):wait()
+  if result.code ~= 0 then
+    return {}
+  end
+  return vim.fn.json_decode(result.stdout)
+end
+
 return M

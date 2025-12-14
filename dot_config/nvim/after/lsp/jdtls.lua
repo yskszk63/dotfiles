@@ -51,4 +51,18 @@ return {
   init_options = {
     bundles = bundles,
   },
+
+  before_init = function (_, config)
+    if config.root_dir == nil then
+      return
+    end
+
+    config.settings = vim.tbl_extend("force", config.settings, {
+      java = {
+        configuration = {
+          runtimes = mod.load_runtimes(config.root_dir),
+        },
+      },
+    })
+  end
 }
