@@ -9,4 +9,3 @@ keymap.set('n', 'crm', jdtls.extract_method, { noremap = true, buffer = true })
 
 keymap.set('n', '<LEADER>df', mod.test_class_with_dotenv, { noremap = true, buffer = true })
 keymap.set('n', '<LEADER>dn', mod.test_nearest_method_with_dotenv, { noremap = true, buffer = true })
-

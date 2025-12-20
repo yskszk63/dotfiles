@@ -16,3 +16,7 @@ vim.keymap.set("n", "<C-j>", "gT", { remap = true })
 vim.keymap.set("n", "<Leader>e", "<Cmd>quit<CR>", opts)
 
 vim.keymap.set("v", "<C-/>", "gc", { remap = true })
+
+vim.keymap.set("n", "<Leader>i", function ()
+  vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+end, opts)

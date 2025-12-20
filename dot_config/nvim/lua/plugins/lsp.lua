@@ -39,4 +39,9 @@ return {
       --"nvim-java/nvim-java",
     },
   },
+  {
+    'felpafel/inlay-hint.nvim',
+    event = 'LspAttach',
+    config = true,
+  },
 }
