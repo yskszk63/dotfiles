@@ -31,3 +31,18 @@ require("config.term")
 
 -- lazy.nvim
 require("config.lazy")
+
+-- Okay ??
+if os.getenv("XDG_CURRENT_DESKTOP") == "GNOME" then
+  vim.g.clipboard = {
+    name = "OSC 52 or wl-copy",
+    copy = {
+      ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+      ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+    },
+    paste = {
+      ["+"] = { "wl-paste", "--no-newline" },
+      ["*"] = { "wl-paste", "--no-newline", "--primary" },
+    },
+  }
+end
