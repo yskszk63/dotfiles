@@ -39,18 +39,18 @@ return {
     },
   },
 
-  -- {
-  --   "mrjones2014/codesettings.nvim",
-  --   config = function ()
-  --     local codesettings = require('codesettings')
-  --     codesettings.setup({})
-  --     vim.lsp.config('*', {
-  --       before_init = function(_, config)
-  --         codesettings.with_local_settings(config.name, config)
-  --       end,
-  --     })
-  --   end
-  -- },
+  {
+    "mrjones2014/codesettings.nvim",
+    config = function ()
+      local codesettings = require('codesettings')
+      codesettings.setup({})
+      vim.lsp.config('*', {
+        before_init = function(_, config)
+          codesettings.with_local_settings(config.name, config)
+        end,
+      })
+    end
+  },
 
   {
     'felpafel/inlay-hint.nvim',

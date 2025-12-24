@@ -32,6 +32,54 @@ return {
       '--java-executable',
       '/usr/bin/java',
       '--jvm-arg=-Djava.import.generatesMetadataFilesAtProjectRoot=false',
+
+      -- -- https://github.com/redhat-developer/vscode-java/blob/c6f1f3a190bc4868927f837dacd683672905d9ce/src/javaServerStarter.ts#L120
+      -- '--jvm-arg=--add-opens',
+      -- '--jvm-arg=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED',
+      -- '--jvm-arg=--add-opens',
+      -- '--jvm-arg=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED',
+      -- '--jvm-arg=--add-opens',
+      -- '--jvm-arg=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED',
+      -- '--jvm-arg=--add-opens',
+      -- '--jvm-arg=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED',
+      -- '--jvm-arg=--add-opens',
+      -- '--jvm-arg=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED',
+      -- '--jvm-arg=--add-opens',
+      -- '--jvm-arg=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED',
+      -- '--jvm-arg=--add-opens',
+      -- '--jvm-arg=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED',
+      -- '--jvm-arg=--add-opens',
+      -- '--jvm-arg=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED',
+      -- '--jvm-arg=--add-opens',
+      -- '--jvm-arg=jdk.javadoc/jdk.javadoc.internal.doclets.formats.html.taglets.snippet=ALL-UNNAMED',
+      -- '--jvm-arg=--add-opens',
+      -- '--jvm-arg=jdk.javadoc/jdk.javadoc.internal.doclets.formats.html.taglets=ALL-UNNAMED',
+      -- '--jvm-arg=--add-opens',
+      -- '--jvm-arg=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED',
+      -- '--jvm-arg=--add-opens',
+      -- '--jvm-arg=jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED',
+      -- '--jvm-arg=--add-opens',
+      -- '--jvm-arg=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED',
+      -- '--jvm-arg=--add-opens',
+      -- '--jvm-arg=jdk.compiler/com.sun.tools.javac.platform=ALL-UNNAMED',
+      -- '--jvm-arg=--add-opens',
+      -- '--jvm-arg=jdk.compiler/com.sun.tools.javac.resources=ALL-UNNAMED',
+      -- '--jvm-arg=--add-opens',
+      -- '--jvm-arg=java.base/sun.nio.ch=ALL-UNNAMED',
+      -- '--jvm-arg=--add-opens',
+      -- '--jvm-arg=jdk.zipfs/jdk.nio.zipfs=ALL-UNNAMED',
+      -- '--jvm-arg=--add-opens',
+      -- '--jvm-arg=java.compiler/javax.tools=ALL-UNNAMED',
+      -- '--jvm-arg=--add-opens',
+      -- '--jvm-arg=java.base/java.nio.channels=ALL-UNNAMED',
+      -- '--jvm-arg=-DICompilationUnitResolver=org.eclipse.jdt.core.dom.JavacCompilationUnitResolver',
+      -- '--jvm-arg=-DAbstractImageBuilder.compilerFactory=org.eclipse.jdt.internal.javac.JavacCompilerFactory',
+      -- '--jvm-arg=-DCompilationUnit.DOM_BASED_OPERATIONS=true',
+      -- '--jvm-arg=-DSourceIndexer.DOM_BASED_INDEXER=true',
+      -- '--jvm-arg=-DMatchLocator.DOM_BASED_MATCH=true',
+      -- '--jvm-arg=-DIJavaSearchDelegate=org.eclipse.jdt.internal.core.search.DOMJavaSearchDelegate',
+      -- -- https://github.com/redhat-developer/vscode-java/blob/c6f1f3a190bc4868927f837dacd683672905d9ce/src/javaServerStarter.ts#L170
+      -- '--jvm-arg=-DCompilationUnit.codeComplete.DOM_BASED_OPERATIONS=true',
     }
 
     if config.root_dir ~= nil and mod.check_lombok(config.root_dir .. "/pom.xml") then
@@ -53,14 +101,17 @@ return {
   },
 
   before_init = function (_, config)
-    if config.root_dir == nil then
-      return
+    require('codesettings').with_local_settings(config.name, config)
+
+    local root_dir = config.root_dir
+    if root_dir == nil then
+      root_dir = vim.fn.getcwd()
     end
 
     config.settings = vim.tbl_extend("force", config.settings, {
       java = {
         configuration = {
-          runtimes = mod.load_runtimes(config.root_dir),
+          runtimes = mod.load_runtimes(root_dir),
         },
       },
     })
