@@ -100,6 +100,14 @@ return {
     bundles = bundles,
   },
 
+  settings = {
+    java = {
+      signatureHelp = {
+        enabled = true,
+      },
+    },
+  },
+
   before_init = function (_, config)
     require('codesettings').with_local_settings(config.name, config)
 

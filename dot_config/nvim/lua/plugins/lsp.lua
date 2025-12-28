@@ -57,4 +57,29 @@ return {
     event = 'LspAttach',
     config = true,
   },
+
+  {
+    'dnlhc/glance.nvim',
+    cmd = 'Glance',
+    keys = {
+      { "gD", "<CMD>Glance definitions<CR>", mode = { "n" } },
+      { "gR", "<CMD>Glance references<CR>", mode = { "n" } },
+      { "gY", "<CMD>Glance type_definitions<CR>", mode = { "n" } },
+      { "gM", "<CMD>Glance implementations<CR>", mode = { "n" } },
+    },
+  },
+
+  {
+    "bassamsdata/namu.nvim",
+    opts = {
+      global = { },
+      namu_symbols = { -- Specific Module options
+        options = {},
+      },
+    },
+    keys = {
+      { "<LEADER>ss", "<CMD>Namu symbols<cr>", mode = { "n" }, desc = "Jump to LSP symbol", silent = true },
+      { "<LEADER>sw", "<CMD>Namu workspace<cr>", mode = { "n" }, desc = "LSP Symbols - Workspace", silent = true },
+    },
+  },
 }

@@ -18,40 +18,11 @@ return {
     end,
   },
 
-  --[==[
-  {
-    "romgrk/barbar.nvim",
-    dependencies = {
-      "lewis6991/gitsigns.nvim",
-      "nvim-tree/nvim-web-devicons",
-    },
-    config = function()
-      local map = vim.api.nvim_set_keymap
-      local opts = { noremap = true, silent = true }
-
-      -- Move to previous/next
-      map("n", "<C-j>", "<Cmd>BufferPrevious<CR>", opts)
-      map("n", "<C-k>", "<Cmd>BufferNext<CR>", opts)
-      -- Close buffer
-      map("n", "<leader>e", "<Cmd>BufferClose<CR>", opts)
-    end,
-  },
-  ]==]
   {
     'alvarosevilla95/luatab.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = true,
   },
-
-  --[==[
-  {
-    "kyazdani42/nvim-tree.lua",
-    keys = {
-      { "<C-n>", ":NvimTreeToggle<CR>" },
-    },
-    config = true,
-  },
-  ]==]
 
   {
     "stevearc/oil.nvim",
@@ -72,10 +43,12 @@ return {
       { "<c-n>", "<CMD>Oil --float<CR>", mode = { "n" } },
     },
   },
+
   {
     "benomahony/oil-git.nvim",
     dependencies = { "stevearc/oil.nvim" },
   },
+
   {
     "JezerM/oil-lsp-diagnostics.nvim",
     dependencies = { "stevearc/oil.nvim" },
@@ -145,5 +118,18 @@ return {
       "MunifTanjim/nui.nvim",
       -- "rcarriga/nvim-notify",
     },
+  },
+
+  {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    opts = {
+      delay = 500,
+    },
+  },
+
+  {
+    "OXY2DEV/markview.nvim",
+    lazy = false,
   },
 }

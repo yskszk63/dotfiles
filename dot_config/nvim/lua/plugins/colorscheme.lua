@@ -12,6 +12,6 @@ return {
     vim.g.sonokai_diagnostic_virtual_text = "colored"
     vim.g.sonokai_menu_selection_background = "green"
 
-    vim.cmd [[colorscheme sonokai]]
+    vim.cmd.colorscheme("sonokai")
   end,
 }
