@@ -77,6 +77,7 @@ return {
     opts = { },
   },
 
+  --[==[
   {
     "shellRaining/hlchunk.nvim",
     event = { "BufReadPre", "BufNewFile" },
@@ -91,6 +92,7 @@ return {
       })
     end
   },
+  ]==]
 
   -- {
   --   "folke/noice.nvim",
@@ -131,5 +133,12 @@ return {
   {
     "OXY2DEV/markview.nvim",
     lazy = false,
+    opts = {
+      markdown = {
+        code_blocks = {
+          style = "simple",
+        },
+      },
+    },
   },
 }

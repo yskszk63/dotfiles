@@ -39,6 +39,7 @@ return {
     },
   },
 
+  --[==[
   {
     "mrjones2014/codesettings.nvim",
     config = function ()
@@ -51,12 +52,15 @@ return {
       })
     end
   },
+  ]==]
 
+  --[==[
   {
     'felpafel/inlay-hint.nvim',
     event = 'LspAttach',
     config = true,
   },
+  ]==]
 
   {
     'dnlhc/glance.nvim',
