@@ -53,6 +53,12 @@ zinit light zdharma-continuum/fast-syntax-highlighting
 zinit light zsh-users/zsh-completions
 zinit load agkozak/zsh-z
 
+# starship
+#zinit ice as"command" from"gh-r" \
+#          atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \
+#          atpull"%atclone" src"init.zsh"
+#zinit light starship/starship
+
 [[ ! -f /usr/share/fzf/key-bindings.zsh ]] || source /usr/share/fzf/key-bindings.zsh
 [[ ! -f /usr/share/fzf/completion.zsh ]] || source /usr/share/fzf/completion.zsh
 
@@ -73,10 +79,10 @@ autoload -Uz compinit && compinit
 
 which aws_completer > /dev/null && complete -C aws_completer aws
 
-[[ ! -f ~/.zshrc.custom ]] || source ~/.zshrc.custom
-
 which virsh > /dev/null 2>&1 && export LIBVIRT_DEFAULT_URI="qemu:///system"
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+[[ ! -f ~/.zshrc.custom ]] || source ~/.zshrc.custom
