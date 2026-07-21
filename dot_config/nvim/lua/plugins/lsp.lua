@@ -27,6 +27,8 @@ return {
         "biome",
         "lemminx",
         "lua_ls",
+        "oxfmt",
+        "oxlint",
       })
     end,
     dependencies = {
