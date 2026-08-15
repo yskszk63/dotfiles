@@ -70,7 +70,14 @@ which renvim > /dev/null 2>&1 && {
 }
 
 # asdf
-export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+which asdf > /dev/null 2>&1 && {
+    export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+}
+
+# mise
+which mise > /dev/null 2>&1 && {
+    eval "$(mise activate zsh)"
+}
 
 autoload bashcompinit && bashcompinit
 autoload -Uz compinit && compinit
